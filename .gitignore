@@ -1,0 +1,9 @@
+.vs
+.vscode
+
+# Csharp files
+bin
+obj
+*.suo
+*.user
+*appsettings.*.json
