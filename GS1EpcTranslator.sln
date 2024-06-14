@@ -5,9 +5,9 @@ VisualStudioVersion = 17.9.34728.123
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GS1CompanyPrefix", "src\GS1CompanyPrefix\GS1CompanyPrefix.csproj", "{CDEAA9F7-998D-4F31-A37B-A9F6C603675E}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GS1EpcTranslator", "GS1EpcTranslator\GS1EpcTranslator.csproj", "{61D94CBF-13EE-48AA-A078-5554718880F7}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GS1EpcTranslator", "src\GS1EpcTranslator\GS1EpcTranslator.csproj", "{61D94CBF-13EE-48AA-A078-5554718880F7}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Gs1EpcTranslator.Api", "Gs1EpcTranslator.Api\Gs1EpcTranslator.Api.csproj", "{3CC8681E-E634-471C-A8F4-2578F608FC7D}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Gs1EpcTranslator.Api", "src\Gs1EpcTranslator.Api\Gs1EpcTranslator.Api.csproj", "{3CC8681E-E634-471C-A8F4-2578F608FC7D}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
