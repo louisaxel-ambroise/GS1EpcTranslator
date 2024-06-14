@@ -10,7 +10,7 @@ namespace GS1EpcTranslator.Parsers.ElementString;
 public sealed class ElementStringGtinParserStrategy(GS1CompanyPrefixProvider companyPrefixProvider) : IEpcParserStrategy
 {
     /// <summary>
-    /// Matches the DigitalLink GTIN format (AI 01 and 21 or 10)
+    /// Matches the ElementString GTIN format (AI 01 and 21 or 10)
     /// </summary>
     public string Pattern => "^\\(01\\)(?<gtin>\\d{13})((\\(21\\)(?<ext>.{1,20}))|(\\(10\\)(?<lot>.{1,20})))?$";
 

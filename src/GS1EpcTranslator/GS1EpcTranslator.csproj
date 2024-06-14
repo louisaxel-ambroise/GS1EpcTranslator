@@ -11,7 +11,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\src\GS1CompanyPrefix\GS1CompanyPrefix.csproj" />
+    <ProjectReference Include="..\GS1CompanyPrefix\GS1CompanyPrefix.csproj" />
   </ItemGroup>
 
 </Project>

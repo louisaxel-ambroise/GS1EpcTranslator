@@ -7,6 +7,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\GS1CompanyPrefix\GS1CompanyPrefix.csproj" />
     <ProjectReference Include="..\GS1EpcTranslator\GS1EpcTranslator.csproj" />
   </ItemGroup>
 

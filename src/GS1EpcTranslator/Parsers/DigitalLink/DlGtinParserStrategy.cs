@@ -10,8 +10,8 @@ namespace GS1EpcTranslator.Parsers.DigitalLink;
 public sealed class DlGtinParserStrategy(GS1CompanyPrefixProvider companyPrefixProvider) : IEpcParserStrategy
 {    
     /// <summary>
-     /// Matches the DigitalLink GTIN format (AI 01 and 21 or 10)
-     /// </summary>
+    /// Matches the DigitalLink GTIN format (AI 01 and 21 or 10)
+    /// </summary>
     public string Pattern => "^https?://.*/01/(?<gtin>\\d{13})((/21/(?<ext>.{1,20}))|(/10/(?<lot>.{1,20})))?$";
 
     /// <summary>

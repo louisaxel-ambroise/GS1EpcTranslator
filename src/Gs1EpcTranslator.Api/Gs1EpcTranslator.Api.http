@@ -1,6 +1,0 @@
-@Gs1EpcTranslator.Api_HostAddress = http://localhost:5179
-
-GET {{Gs1EpcTranslator.Api_HostAddress}}/weatherforecast/
-Accept: application/json
-
-###
