@@ -7,8 +7,15 @@ using GS1EpcTranslator.Parsers.DigitalLink;
 using GS1CompanyPrefix;
 using GS1EpcTranslator.Formatters;
 using Gs1EpcTranslator.Api;
+using System.Text.Json.Serialization;
 
 var builder = WebApplication.CreateBuilder(args);
+
+builder.Services.ConfigureHttpJsonOptions(options =>
+{
+    options.SerializerOptions.Converters.Add(new JsonStringEnumConverter());
+});
+
 builder.Services.AddSingleton<GS1CompanyPrefixProvider>();
 builder.Services.AddSingleton<GS1EpcTranslatorContext>();
 
@@ -18,6 +25,10 @@ builder.Services.AddSingleton<IEpcParserStrategy, ElementStringSsccParserStrateg
 builder.Services.AddSingleton<IEpcParserStrategy, UrnGtinParserStrategy>();
 builder.Services.AddSingleton<IEpcParserStrategy, DlGtinParserStrategy>();
 builder.Services.AddSingleton<IEpcParserStrategy, ElementStringGtinParserStrategy>();
+builder.Services.AddSingleton<IEpcParserStrategy, UrnSglnParserStrategy>();
+builder.Services.AddSingleton<IEpcParserStrategy, DlSglnParserStrategy>();
+builder.Services.AddSingleton<IEpcParserStrategy, ElementStringSglnParserStrategy>();
+
 builder.Services.AddHostedService<CompanyPrefixBackgroundLoader>();
 
 var app = builder.Build();
@@ -25,19 +36,17 @@ var app = builder.Build();
 app.UseHttpsRedirection();
 app.MapPost("/translate", ([FromBody] string[] values, [FromServices] GS1EpcTranslatorContext context) =>
 {
-    var results = new EpcResult[values.Length];
-
-    for(var i=0; i<values.Length; i++)
+    var results = values.Select(value =>
     {
-        if (context.TryParse(values[i], out var result))
+        if (context.TryParse(value, out var result))
         {
-            results[i] = result.Format(values[i]);
+            return result.Format(value);
         }
         else
         {
-            results[i] = UnknownFormatter.Value.Format(values[i]);
+            return UnknownFormatter.Value.Format(value);
         }
-    }
+    });
     
     return Results.Ok(results);
 });

@@ -1,12 +1,13 @@
-@HostAddress = http://localhost:5179
+@HostAddress = http://localhost:5000
 
 POST {{HostAddress}}/translate
 Content-Type: application/json
 Accept: application/json
 
 [ 
+  "urn:epc:id:sgln:871933301053..0",
+    "(414)8719333010535",
+    "https://id.fastnt.org/test/path/414/0650600013430",
     "https://id.fastnt.org/test/path/01/0650600013435/10/456",
-    "(01)5410000123459",
     "urn:epc:idpat:sgtin:0650600.013435.*"
 ]
-

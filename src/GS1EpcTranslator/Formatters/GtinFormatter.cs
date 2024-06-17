@@ -17,33 +17,32 @@ public sealed class GtinFormatter(string gcp, string itemRef, string ext, string
         var type = GetGtinType();
         var (urn, elementString, dl) = type switch
         {
-            Type.sgtin => ($"urn:epc:id:sgtin:{gcp}.{itemRef}.{ext}", $"(01){gcp}{itemRef}(21){ext}", $"https://id.gs1.org/01/{gcp}{itemRef}/21/{ext}"),
-            Type.lgtin => ($"urn:epc:id:lgtin:{gcp}.{itemRef}.{lot}", $"(01){gcp}{itemRef}(10){lot}", $"https://id.gs1.org/01/{gcp}{itemRef}/10/{lot}"),
-            _ => ($"urn:epc:idpat:sgtin:{gcp}.{itemRef}.*", $"(01){gcp}{itemRef}", $"https://id.gs1.org/01/{gcp}{itemRef}")
+            EpcType.SGTIN => ($"urn:epc:id:sgtin:{gcp}.{itemRef}.{ext}", $"(01){gcp}{itemRef}(21){ext}", $"https://id.gs1.org/01/{gcp}{itemRef}/21/{ext}"),
+            EpcType.LGTIN => ($"urn:epc:id:lgtin:{gcp}.{itemRef}.{lot}", $"(01){gcp}{itemRef}(10){lot}", $"https://id.gs1.org/01/{gcp}{itemRef}/10/{lot}"),
+            EpcType.GTIN => ($"urn:epc:idpat:sgtin:{gcp}.{itemRef}.*", $"(01){gcp}{itemRef}", $"https://id.gs1.org/01/{gcp}{itemRef}"),
+            _ => throw new Exception($"Invalid EpcType: {type}")
         };
 
-        return new(type.ToString(), value, urn, elementString, dl);
+        return new(type, value, urn, elementString, dl);
     }
 
     /// <summary>
     /// Determines the type of Gtin based on the provided values
     /// </summary>
     /// <returns>The type of Epc</returns>
-    private Type GetGtinType()
+    private EpcType GetGtinType()
     {
         if (!string.IsNullOrEmpty(ext))
         {
-            return Type.sgtin;
+            return EpcType.SGTIN;
         }
         if (!string.IsNullOrEmpty(lot))
         {
-            return Type.lgtin;
+            return EpcType.LGTIN;
         }
         else
         {
-            return Type.gtin;
+            return EpcType.GTIN;
         }
     }
-
-    private enum Type { gtin, sgtin, lgtin };
 }

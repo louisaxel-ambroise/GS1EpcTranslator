@@ -8,4 +8,14 @@
 /// <param name="Urn">The URN format of the Epc</param>
 /// <param name="ElementString">The Element String format of the Epc</param>
 /// <param name="DigitalLink">The Pure Digital Link format of the Epc</param>
-public record EpcResult(string Type, string Raw, string Urn, string ElementString, string DigitalLink);
+public record EpcResult(EpcType Type, string Raw, string Urn, string ElementString, string DigitalLink);
+
+public enum EpcType 
+{ 
+    Unknown,
+    SSCC, 
+    GTIN, 
+    LGTIN, 
+    SGTIN,
+    SGLN
+};
