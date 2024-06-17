@@ -17,5 +17,8 @@ public enum EpcType
     GTIN, 
     LGTIN, 
     SGTIN,
-    SGLN
+    SGLN,
+    GRAI,
+    GIAI,
+    // TODO: GRSN, GSRNP, GDTI, CPI, SGCN, GINC, GSIN, ITIP, UPUI, PGLN
 };

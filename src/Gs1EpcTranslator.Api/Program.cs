@@ -28,6 +28,12 @@ builder.Services.AddSingleton<IEpcParserStrategy, ElementStringGtinParserStrateg
 builder.Services.AddSingleton<IEpcParserStrategy, UrnSglnParserStrategy>();
 builder.Services.AddSingleton<IEpcParserStrategy, DlSglnParserStrategy>();
 builder.Services.AddSingleton<IEpcParserStrategy, ElementStringSglnParserStrategy>();
+builder.Services.AddSingleton<IEpcParserStrategy, UrnGraiParserStrategy>();
+builder.Services.AddSingleton<IEpcParserStrategy, DlGraiParserStrategy>();
+builder.Services.AddSingleton<IEpcParserStrategy, ElementStringGraiParserStrategy>();
+builder.Services.AddSingleton<IEpcParserStrategy, UrnGiaiParserStrategy>();
+builder.Services.AddSingleton<IEpcParserStrategy, DlGiaiParserStrategy>();
+builder.Services.AddSingleton<IEpcParserStrategy, ElementStringGiaiParserStrategy>();
 
 builder.Services.AddHostedService<CompanyPrefixBackgroundLoader>();
 
