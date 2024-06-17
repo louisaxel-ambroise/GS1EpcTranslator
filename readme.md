@@ -112,6 +112,6 @@ Contributions are welcome! To report issues or propose enhancements, please open
 
 
 ## License
-This project is licensed under the MIT License. See the LICENSE file for more information.
+This project is licensed under the Apache 2.0 License. See the LICENSE file for more information.
 
 For further questions or assistance, please contact me directly at fastnt@pm.me or ambroise.la@pm.me.
