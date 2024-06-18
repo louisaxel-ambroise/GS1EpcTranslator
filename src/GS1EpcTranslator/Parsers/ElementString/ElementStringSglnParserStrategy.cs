@@ -1,8 +1,4 @@
-﻿using GS1CompanyPrefix;
-using GS1EpcTranslator.Formatters;
-using GS1EpcTranslator.Helpers;
-
-namespace GS1EpcTranslator.Parsers.ElementString;
+﻿namespace GS1EpcTranslator.Parsers.ElementString;
 
 /// <summary>
 /// Implementation of <see cref="IEpcParserStrategy"/> that matches SGLN in ElementString format
@@ -13,7 +9,7 @@ public sealed class ElementStringSglnParserStrategy(GS1CompanyPrefixProvider com
     /// <summary>
     /// Matches the ElementString SGLN format (AI 01 and 21 or 10)
     /// </summary>
-    public string Pattern => "^\\(414\\)(?<sgln>\\d{12})(?<cd>\\d)(\\(254\\)(?<ext>\\d+))?$";
+    public string Pattern => "^\\(414\\)(?<sgln>\\d{12})(?<cd>\\d)(\\(254\\)(?<ext>.+))?$";
 
     /// <summary>
     /// Transforms the ElementString SGLN parsed values into a <see cref="IEpcFormatter"/>
@@ -26,7 +22,7 @@ public sealed class ElementStringSglnParserStrategy(GS1CompanyPrefixProvider com
         var gcp = values["sgln"][..gcpLength];
         var locationRef = values["sgln"][gcpLength..];
 
-        ArgumentOutOfRangeException.ThrowIfLessThan(gcpLength, 0);
+        Alphanumeric.Validate(values["ext"]);
         ArgumentOutOfRangeException.ThrowIfNotEqual(values["cd"], CheckDigit.Compute(values["sgln"]));
 
         return new SglnFormatter(

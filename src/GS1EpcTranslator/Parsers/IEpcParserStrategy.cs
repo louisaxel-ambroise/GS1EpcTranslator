@@ -1,5 +1,4 @@
-﻿using GS1EpcTranslator.Formatters;
-using System.Text.RegularExpressions;
+﻿using System.Text.RegularExpressions;
 
 namespace GS1EpcTranslator.Parsers;
 

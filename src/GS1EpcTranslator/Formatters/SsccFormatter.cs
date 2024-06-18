@@ -1,5 +1,4 @@
 ﻿using FasTnT.GS1EpcTranslator;
-using GS1EpcTranslator.Helpers;
 
 namespace GS1EpcTranslator.Formatters;
 

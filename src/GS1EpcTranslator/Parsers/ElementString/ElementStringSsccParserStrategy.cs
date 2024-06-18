@@ -1,8 +1,4 @@
-﻿using GS1CompanyPrefix;
-using GS1EpcTranslator.Formatters;
-using GS1EpcTranslator.Helpers;
-
-namespace GS1EpcTranslator.Parsers.ElementString;
+﻿namespace GS1EpcTranslator.Parsers.ElementString;
 
 /// <summary>
 /// Implementation of <see cref="IEpcParserStrategy"/> that matches SSCC in ElementString format
@@ -11,7 +7,7 @@ namespace GS1EpcTranslator.Parsers.ElementString;
 public sealed class ElementStringSsccParserStrategy(GS1CompanyPrefixProvider companyPrefixProvider) : IEpcParserStrategy
 {
     /// <summary>
-    /// Matches the ElementString SSCC format (AI 01 and 21 or 10)
+    /// Matches the ElementString SSCC format (AI 00)
     /// </summary>
     public string Pattern => "^\\(00\\)(?<ext>\\d)(?<sscc>\\d{16})(?<cd>\\d)$";
 

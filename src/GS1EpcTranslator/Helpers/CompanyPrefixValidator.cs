@@ -1,6 +1,4 @@
-﻿using GS1CompanyPrefix;
-
-namespace GS1EpcTranslator.Helpers;
+﻿namespace GS1EpcTranslator.Helpers;
 
 /// <summary>
 /// Helper class for the GS1 Company Prefixes

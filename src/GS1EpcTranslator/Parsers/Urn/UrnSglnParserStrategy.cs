@@ -1,8 +1,4 @@
-﻿using GS1CompanyPrefix;
-using GS1EpcTranslator.Formatters;
-using GS1EpcTranslator.Helpers;
-
-namespace GS1EpcTranslator.Parsers.Implementations;
+﻿namespace GS1EpcTranslator.Parsers.Implementations;
 
 /// <summary>
 /// Implementation of <see cref="IEpcParserStrategy"/> that matches SGLN in URN format
@@ -13,7 +9,7 @@ public sealed class UrnSglnParserStrategy(GS1CompanyPrefixProvider gcpProvider) 
     /// <summary>
     /// Matches the URN SSCC format
     /// </summary>
-    public string Pattern => "^urn:epc:id:sgln:(?<gcp>\\d{6,12})\\.(?<locationRef>\\d{0,6})(?<=[\\d\\.]{13})\\.(0|(?<ext>\\d+))$";
+    public string Pattern => "^urn:epc:id:sgln:(?<gcp>\\d{6,12})\\.(?<locationRef>\\d{0,6})(?<=[\\d\\.]{13})\\.(0|(?<ext>.+))$";
 
     /// <summary>
     /// Transforms the URN SGLN parsed values into a <see cref="IEpcFormatter"/>
@@ -22,11 +18,14 @@ public sealed class UrnSglnParserStrategy(GS1CompanyPrefixProvider gcpProvider) 
     /// <returns>The <see cref="IEpcFormatter"/> for the SGLN value</returns>
     public IEpcFormatter Transform(IDictionary<string, string> values)
     {
+        var ext = Alphanumeric.ToGraphicSymbol(values["ext"]);
+
+        Alphanumeric.Validate(ext);
         CompanyPrefixValidator.VerifyGcpLength(values["gcp"], gcpProvider);
 
         return new SglnFormatter(
             gcp: values["gcp"],
             locationRef: values["locationRef"],
-            ext: values["ext"]);
+            ext: ext);
     }
 }

@@ -1,5 +1,7 @@
-﻿using GS1EpcTranslator.Formatters;
-using GS1EpcTranslator.Parsers;
+﻿global using GS1CompanyPrefix;
+global using GS1EpcTranslator.Formatters;
+global using GS1EpcTranslator.Helpers;
+global using GS1EpcTranslator.Parsers;
 
 namespace FasTnT.GS1EpcTranslator;
 

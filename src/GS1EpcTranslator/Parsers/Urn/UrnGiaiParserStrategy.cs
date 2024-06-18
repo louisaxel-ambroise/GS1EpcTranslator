@@ -1,8 +1,4 @@
-﻿using GS1CompanyPrefix;
-using GS1EpcTranslator.Formatters;
-using GS1EpcTranslator.Helpers;
-
-namespace GS1EpcTranslator.Parsers.Implementations;
+﻿namespace GS1EpcTranslator.Parsers.Implementations;
 
 /// <summary>
 /// Implementation of <see cref="IEpcParserStrategy"/> that matches GIAI in URN format
@@ -13,7 +9,7 @@ public sealed class UrnGiaiParserStrategy(GS1CompanyPrefixProvider gcpProvider) 
     /// <summary>
     /// Matches the URN GIAI format
     /// </summary>
-    public string Pattern => "^urn:epc:id:giai:(?<gcp>\\d{6,12})\\.(?<assetRef>\\d*)$";
+    public string Pattern => "^urn:epc:id:giai:(?<gcp>\\d{6,12})\\.(?<assetRef>.*)$";
 
     /// <summary>
     /// Transforms the URN GIAI parsed values into a <see cref="IEpcFormatter"/>
@@ -22,10 +18,13 @@ public sealed class UrnGiaiParserStrategy(GS1CompanyPrefixProvider gcpProvider) 
     /// <returns>The <see cref="IEpcFormatter"/> for the GIAI value</returns>
     public IEpcFormatter Transform(IDictionary<string, string> values)
     {
+        var assetRef = Alphanumeric.ToGraphicSymbol(values["assetRef"]);
+
+        Alphanumeric.Validate(assetRef);
         CompanyPrefixValidator.VerifyGcpLength(values["gcp"], gcpProvider);
 
         return new GiaiFormatter(
             gcp: values["gcp"],
-            assetRef: values["assetRef"]);
+            assetRef: assetRef);
     }
 }

@@ -1,8 +1,4 @@
-﻿using GS1CompanyPrefix;
-using GS1EpcTranslator.Formatters;
-using GS1EpcTranslator.Helpers;
-
-namespace GS1EpcTranslator.Parsers.DigitalLink;
+﻿namespace GS1EpcTranslator.Parsers.DigitalLink;
 
 /// <summary>
 /// Implementation of <see cref="IEpcParserStrategy"/> that matches GIAI in DigitalLink format
@@ -13,7 +9,7 @@ public sealed class DlGiaiParserStrategy(GS1CompanyPrefixProvider companyPrefixP
     /// <summary>
     /// Matches the DigitalLink GIAI format (AI 8004)
     /// </summary>
-    public string Pattern => "^(?<domain>https?://.*)/(8004|giai)/0(?<giai>\\d+)$";
+    public string Pattern => "^(?<domain>https?://.*)/(8004|giai)/(?<giai>(\\d{6,12}.*))$";
 
     /// <summary>
     /// Transforms the DigitalLink GIAI parsed values into a <see cref="IEpcFormatter"/>
@@ -24,9 +20,9 @@ public sealed class DlGiaiParserStrategy(GS1CompanyPrefixProvider companyPrefixP
     {
         var gcpLength = companyPrefixProvider.GetCompanyPrefixLength(values["giai"]);
         var gcp = values["giai"][..gcpLength];
-        var assetRef = values["giai"][gcpLength..];
+        var assetRef = Alphanumeric.ToGraphicSymbol(values["giai"][gcpLength..]);
 
-        ArgumentOutOfRangeException.ThrowIfNotEqual(values["cd"], CheckDigit.Compute(values["grai"]));
+        Alphanumeric.Validate(assetRef);
 
         return new GiaiFormatter(
             gcp: gcp, 

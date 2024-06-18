@@ -1,8 +1,4 @@
-﻿using GS1CompanyPrefix;
-using GS1EpcTranslator.Formatters;
-using GS1EpcTranslator.Helpers;
-
-namespace GS1EpcTranslator.Parsers.ElementString;
+﻿namespace GS1EpcTranslator.Parsers.ElementString;
 
 /// <summary>
 /// Implementation of <see cref="IEpcParserStrategy"/> that matches SSCC in ElementString format
@@ -13,7 +9,7 @@ public sealed class ElementStringGraiParserStrategy(GS1CompanyPrefixProvider com
     /// <summary>
     /// Matches the ElementString SSCC format (AI 8003)
     /// </summary>
-    public string Pattern => "^\\(8003\\)0(?<grai>\\d{12})(?<cd>\\d)(?<sn>\\d+)$";
+    public string Pattern => "^\\(8003\\)0(?<grai>\\d{12})(?<cd>\\d)(?<sn>.+)$";
 
     /// <summary>
     /// Transforms the ElementString GRAI parsed values into a <see cref="IEpcFormatter"/>
@@ -26,6 +22,7 @@ public sealed class ElementStringGraiParserStrategy(GS1CompanyPrefixProvider com
         var gcp = values["grai"][..gcpLength];
         var assetType = values["grai"][gcpLength..];
 
+        Alphanumeric.Validate(values["sn"]);
         ArgumentOutOfRangeException.ThrowIfNotEqual(values["cd"], CheckDigit.Compute(values["grai"]));
 
         return new GraiFormatter(

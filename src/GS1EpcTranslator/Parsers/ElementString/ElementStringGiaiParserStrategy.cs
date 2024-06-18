@@ -1,7 +1,4 @@
-﻿using GS1CompanyPrefix;
-using GS1EpcTranslator.Formatters;
-
-namespace GS1EpcTranslator.Parsers.ElementString;
+﻿namespace GS1EpcTranslator.Parsers.ElementString;
 
 /// <summary>
 /// Implementation of <see cref="IEpcParserStrategy"/> that matches SSCC in ElementString format
@@ -12,7 +9,7 @@ public sealed class ElementStringGiaiParserStrategy(GS1CompanyPrefixProvider com
     /// <summary>
     /// Matches the ElementString GIAI format (AI 8004)
     /// </summary>
-    public string Pattern => "^\\(8004\\)(?<giai>\\d+)$";
+    public string Pattern => "^\\(8004\\)(?<giai>(\\d{6,12}.*))$";
 
     /// <summary>
     /// Transforms the ElementString GIAI parsed values into a <see cref="IEpcFormatter"/>
@@ -24,6 +21,8 @@ public sealed class ElementStringGiaiParserStrategy(GS1CompanyPrefixProvider com
         var gcpLength = companyPrefixProvider.GetCompanyPrefixLength(values["giai"]);
         var gcp = values["giai"][..gcpLength];
         var assetRef = values["giai"][gcpLength..];
+
+        Alphanumeric.Validate(assetRef);
 
         return new GiaiFormatter(
             gcp: gcp,

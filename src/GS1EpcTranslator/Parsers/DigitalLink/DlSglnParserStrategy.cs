@@ -1,8 +1,4 @@
-﻿using GS1CompanyPrefix;
-using GS1EpcTranslator.Formatters;
-using GS1EpcTranslator.Helpers;
-
-namespace GS1EpcTranslator.Parsers.DigitalLink;
+﻿namespace GS1EpcTranslator.Parsers.DigitalLink;
 
 /// <summary>
 /// Implementation of <see cref="IEpcParserStrategy"/> that matches SGLN in DigitalLink format
@@ -11,9 +7,9 @@ namespace GS1EpcTranslator.Parsers.DigitalLink;
 public sealed class DlSglnParserStrategy(GS1CompanyPrefixProvider companyPrefixProvider) : IEpcParserStrategy
 {
     /// <summary>
-    /// Matches the DigitalLink SGLN format (AI 414) with or wirhout extension (AI 254)
+    /// Matches the DigitalLink SGLN format (AI 414) with or wirhout extension (AI 414)
     /// </summary>
-    public string Pattern => "^(?<domain>https?://.*)/(414|sgln)/(?<sgln>\\d{12})(?<cd>\\d)((254|ext)(?<ext>\\d+))?$";
+    public string Pattern => "^(?<domain>https?://.*)/(414|sgln)/(?<sgln>\\d{12})(?<cd>\\d)/((254|ext)/(?<ext>.+))?$";
 
     /// <summary>
     /// Transforms the DigitalLink SGLN parsed values into a <see cref="IEpcFormatter"/>
@@ -25,10 +21,12 @@ public sealed class DlSglnParserStrategy(GS1CompanyPrefixProvider companyPrefixP
         var gcpLength = companyPrefixProvider.GetCompanyPrefixLength(values["sgln"]);
         var gcp = values["sgln"][..gcpLength];
         var locationRef = values["sgln"][gcpLength..];
+        var ext = Alphanumeric.ToGraphicSymbol(values["ext"]);
 
+        Alphanumeric.Validate(ext);
         ArgumentOutOfRangeException.ThrowIfLessThan(gcpLength, 0);
         ArgumentOutOfRangeException.ThrowIfNotEqual(values["cd"], CheckDigit.Compute(values["sgln"]));
 
-        return new SglnFormatter(gcp, locationRef, values["ext"]);
+        return new SglnFormatter(gcp, locationRef, ext);
     }
 }

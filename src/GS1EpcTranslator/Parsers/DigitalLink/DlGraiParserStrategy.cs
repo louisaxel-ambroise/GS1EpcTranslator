@@ -1,8 +1,4 @@
-﻿using GS1CompanyPrefix;
-using GS1EpcTranslator.Formatters;
-using GS1EpcTranslator.Helpers;
-
-namespace GS1EpcTranslator.Parsers.DigitalLink;
+﻿namespace GS1EpcTranslator.Parsers.DigitalLink;
 
 /// <summary>
 /// Implementation of <see cref="IEpcParserStrategy"/> that matches GRAI in DigitalLink format
@@ -13,7 +9,7 @@ public sealed class DlGraiParserStrategy(GS1CompanyPrefixProvider companyPrefixP
     /// <summary>
     /// Matches the DigitalLink GRAI format (AI 8003)
     /// </summary>
-    public string Pattern => "^(?<domain>https?://.*)/(8003|grai)/0(?<grai>\\d{12})(?<cd>\\d)(?<sn>\\d+)$";
+    public string Pattern => "^(?<domain>https?://.*)/(8003|grai)/0(?<grai>\\d{12})(?<cd>\\d)(?<sn>.+)$";
 
     /// <summary>
     /// Transforms the DigitalLink GRAI parsed values into a <see cref="IEpcFormatter"/>
@@ -25,12 +21,14 @@ public sealed class DlGraiParserStrategy(GS1CompanyPrefixProvider companyPrefixP
         var gcpLength = companyPrefixProvider.GetCompanyPrefixLength(values["grai"]);
         var gcp = values["grai"][..gcpLength];
         var assetType = values["grai"][gcpLength..];
+        var serialNumber = Alphanumeric.ToGraphicSymbol(values["sn"]);
 
+        Alphanumeric.Validate(serialNumber);
         ArgumentOutOfRangeException.ThrowIfNotEqual(values["cd"], CheckDigit.Compute(values["grai"]));
 
         return new GraiFormatter(
             gcp: gcp, 
             assetType: assetType, 
-            serialNumber: values["sn"]);
+            serialNumber: serialNumber);
     }
 }

@@ -1,18 +1,15 @@
-﻿using GS1CompanyPrefix;
-using GS1EpcTranslator.Formatters;
-
-namespace GS1EpcTranslator.Parsers.DigitalLink;
+﻿namespace GS1EpcTranslator.Parsers.DigitalLink;
 
 /// <summary>
 /// Implementation of <see cref="IEpcParserStrategy"/> that matches GTIN in DigitalLink format
 /// </summary>
 /// <param name="companyPrefixProvider">The GCP prefix provider</param>
-public sealed class DlGtinParserStrategy(GS1CompanyPrefixProvider companyPrefixProvider) : IEpcParserStrategy
+public sealed class DlSgtinParserStrategy(GS1CompanyPrefixProvider companyPrefixProvider) : IEpcParserStrategy
 {    
     /// <summary>
-    /// Matches the DigitalLink GTIN format (AI 01 and 21 or 10)
+    /// Matches the DigitalLink GTIN format (AI 01 and 21)
     /// </summary>
-    public string Pattern => "^https?://.*/01/(?<gtin>\\d{13})((/21/(?<ext>.{1,20}))|(/10/(?<lot>.{1,20})))?$";
+    public string Pattern => "^https?://.*/01/(?<indicator>\\d)(?<gtin>\\d{13})/21/(?<ext>.+)$";
 
     /// <summary>
     /// Transforms the DigitalLink GTIN parsed values into a <see cref="IEpcFormatter"/>
@@ -23,8 +20,15 @@ public sealed class DlGtinParserStrategy(GS1CompanyPrefixProvider companyPrefixP
     {
         var gcpLength = companyPrefixProvider.GetCompanyPrefixLength(values["gtin"]);
         var gcp = values["gtin"][..gcpLength];
-        var gtin = values["gtin"][gcpLength..];
+        var itemRef = values["gtin"][gcpLength..];
+        var ext = Alphanumeric.ToGraphicSymbol(values["ext"]);
 
-        return new GtinFormatter(gcp, gtin, values["ext"], values["lot"]);
+        Alphanumeric.Validate(value: ext, maxLength: 20);
+
+        return new SgtinFormatter(
+            indicator: values["indicator"],
+            gcp: gcp, 
+            itemRef: itemRef, 
+            ext: ext);
     }
 }

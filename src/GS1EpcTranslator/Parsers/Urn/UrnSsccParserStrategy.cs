@@ -1,8 +1,4 @@
-﻿using GS1CompanyPrefix;
-using GS1EpcTranslator.Formatters;
-using GS1EpcTranslator.Helpers;
-
-namespace GS1EpcTranslator.Parsers.Implementations;
+﻿namespace GS1EpcTranslator.Parsers.Implementations;
 
 /// <summary>
 /// Implementation of <see cref="IEpcParserStrategy"/> that matches SSCC in URN format

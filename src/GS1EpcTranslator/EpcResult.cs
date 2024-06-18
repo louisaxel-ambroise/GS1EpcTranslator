@@ -20,5 +20,14 @@ public enum EpcType
     SGLN,
     GRAI,
     GIAI,
-    // TODO: GRSN, GSRNP, GDTI, CPI, SGCN, GINC, GSIN, ITIP, UPUI, PGLN
+    GSRN,
+    GSRNP,
+    GDTI,
+    CPI,
+    SGCN,
+    GINC,
+    GSIN,
+    ITIP,
+    UPUI,
+    PGLN
 };
