@@ -22,68 +22,80 @@ public static class GS1CompanyPrefixLoader
     /// <param name="stream">The open stream of the JSON file</param>
     public static void LoadFromJsonStream(GS1CompanyPrefixProvider provider, Stream stream)
     {
-        var buffer = new byte[512];
+        LoadFromJsonStream(provider, stream, stream.Length);
+    }
+
+    public static void LoadFromJsonStream(GS1CompanyPrefixProvider provider, Stream stream, long remainingLength)
+    {
+        var buffer = new byte[256];
         var reader = default(Utf8JsonReader);
-        var status = default(GcpState);
+        var status = default(int);
         var prefix = string.Empty;
         var length = -1;
 
-        // Iterate while the stream is not read until the end
-        while (stream.CanRead && stream.Position < stream.Length)
+        // Iterate while there is still data in the stream
+        while (stream.CanRead && remainingLength > 0)
         {
             // Read next chunk of data from the stream keeping the current reader state
-            Read(buffer, stream, ref reader);
+            remainingLength -= Read(buffer, stream, ref reader);
 
             while (reader.Read())
             {
-                // If the Prefix flag is set the latest token read must be a string (prefix of the next GCP)
-                if (status.HasFlag(GcpState.Prefix))
+                switch (reader.TokenType)
                 {
-                    prefix = reader.GetString()!;
-                    status ^= GcpState.Prefix;
-                }
-                // If the GcpLength flag is set the next token must be the GCP prefix length (int)
-                else if (status.HasFlag(GcpState.GcpLength))
-                {
-                    length = reader.GetInt32();
-                    status ^= GcpState.GcpLength;
-                }
-                // A close object in the Entry context (array) indicates that both the prefix and length of the 
-                // GCP were parsed. We can then safely load it into the Provider.
-                else if (reader.TokenType == JsonTokenType.EndObject && status.HasFlag(GcpState.Entry))
-                {
-                    provider.SetPrefix(prefix, length);
-                    prefix = string.Empty;
-                    length = -1;
-                }
-                else if (reader.TokenType == JsonTokenType.PropertyName && Enum.TryParse<GcpState>(reader.GetString(), true, out var state))
-                {
-                    status |= state;
-                }
-                // End of array while in the "entry" property means we reach the end of the GCP length list.
-                // We can exit from the function and discard the rest of the stream
-                else if (reader.TokenType == JsonTokenType.EndArray && status.HasFlag(GcpState.Entry))
-                {
-                    return;
+                    case JsonTokenType.PropertyName when TryParseGcpState(reader.GetString(), out int state):
+                        status |= state;
+                        break;
+
+                    // If the Prefix flag is set the latest token read must be a string (prefix of the next GCP)
+                    case JsonTokenType.String when HasFlag(status, GcpState.Prefix):
+                        prefix = reader.GetString()!;
+                        status ^= GcpState.Prefix;
+                        break;
+
+                    // If the GcpLength flag is set the next token must be the GCP prefix length (int)
+                    case JsonTokenType.Number when HasFlag(status, GcpState.GcpLength):
+                        length = reader.GetInt32();
+                        status ^= GcpState.GcpLength;
+                        break;
+
+                    // A close object in the Entry context (array) indicates that both the prefix and length of the 
+                    // GCP were parsed. We can then safely load it into the Provider.
+                    case JsonTokenType.EndObject when HasFlag(status, GcpState.Entry):
+                        provider.SetPrefix(prefix, length);
+                        prefix = string.Empty;
+                        length = -1;
+                        break;
+
+                    // End of array while in the "entry" property means we reach the end of the GCP length list.
+                    // We can exit from the function and discard the rest of the stream
+                    case JsonTokenType.EndArray when HasFlag(status, GcpState.Entry):
+                        return;
                 }
             }
         }
     }
 
-    /// <summary>
-    /// Enum to keep track of the <see cref="Utf8JsonReader"/> current state in the GCP document
-    /// </summary>
-    [Flags]
-    private enum GcpState
+    public static bool HasFlag(int status, int flag) => (status & flag) != 0x00;
+
+    public static bool TryParseGcpState(string value, out int state)
     {
-        // Default state
-        None = 0,
-        // Indicates the JSON reader reached the start of the Entry array
-        Entry = 1,
-        // The Prefix property was read
-        Prefix = 2,
-        // GcpLength property was read
-        GcpLength = 4
+        state = value.ToLower() switch
+        {
+            "entry" => GcpState.Entry,
+            "prefix" => GcpState.Prefix,
+            "gcplength" => GcpState.GcpLength,
+            _ => 0x00,
+        };
+
+        return state != 0x00;
+    }
+
+    public static class GcpState
+    {
+        public const int Entry = 0x01;
+        public const int Prefix = 0x02;
+        public const int GcpLength = 0x04;
     }
 
     /// <summary>
@@ -92,9 +104,12 @@ public static class GS1CompanyPrefixLoader
     /// <param name="buffer">The buffer to hold the read data</param>
     /// <param name="stream">The stream to read from</param>
     /// <param name="reader">The <see cref="Utf8JsonReader"/> to fill with the data</param>
-    private static void Read(byte[] buffer, Stream stream, ref Utf8JsonReader reader)
+    /// <returns>The number of bytes read from the stream</returns>
+    private static int Read(byte[] buffer, Stream stream, ref Utf8JsonReader reader)
     {
         var startFrom = 0;
+        var chunkSize = 0;
+        int bytesRead;
 
         // If not all the data were read from the current reader, keep the remaining bytes
         // into the new byte buffer
@@ -107,10 +122,17 @@ public static class GS1CompanyPrefixLoader
         }
 
         // Try to read from the stream the remaining bytes in the buffer
-        var bytesRead = stream.Read(buffer, startFrom, buffer.Length - startFrom);
-        var isFinalBlock = bytesRead + startFrom < buffer.Length;
+        do
+        {
+            bytesRead = stream.Read(buffer, startFrom, buffer.Length - startFrom);
+            chunkSize += bytesRead;
+            startFrom += bytesRead;
+        }
+        while (bytesRead > 0 && startFrom < buffer.Length);
 
         // Return a new JSON reader with the new buffer with the same CurrentState
-        reader = new Utf8JsonReader(buffer, isFinalBlock, reader.CurrentState);
+        reader = new Utf8JsonReader(buffer, bytesRead == 0, reader.CurrentState);
+
+        return chunkSize;
     }
 }

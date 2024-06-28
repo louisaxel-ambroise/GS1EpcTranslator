@@ -5,6 +5,7 @@ using GS1CompanyPrefix;
 using GS1EpcTranslator.Formatters;
 using Gs1EpcTranslator.Api;
 using System.Text.Json.Serialization;
+using System.Reflection;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -19,10 +20,12 @@ var parserStrategies = typeof(IEpcParserStrategy)
 
 foreach(var parserStrategy in parserStrategies)
 {
-    // Register all the parser stratesgies as singleton
+    // Register all the parser strategies as singleton
     builder.Services.AddSingleton(typeof(IEpcParserStrategy), parserStrategy);
 }
 
+var options = builder.Configuration.GetSection(nameof(CompanyPrefixBackgroundLoader.CompanyPrefixOptions));
+builder.Services.Configure<CompanyPrefixBackgroundLoader.CompanyPrefixOptions>(options);
 builder.Services.AddHostedService<CompanyPrefixBackgroundLoader>();
 
 var app = builder.Build();
@@ -34,7 +37,7 @@ app.MapPost("/translate", ([FromBody] string[] values, [FromServices] GS1EpcTran
             ? result.Format(value)
             : UnknownFormatter.Value.Format(value));
 
-    return Results.Ok(results);
+    return Results.Ok(new { Data = results });
 });
 
 app.Run();
