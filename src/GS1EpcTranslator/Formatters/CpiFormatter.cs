@@ -18,7 +18,7 @@ public sealed class CpiFormatter(string gcp, string componentType, string serial
         var elements = $"(8010){gcp}{componentType}(8011){serial}";
 
         return new(
-            Type: EpcType.CPI, 
+            EpcType: EpcType.CPI, 
             Raw: value, 
             Urn: urn,
             ElementString: elements,

@@ -20,7 +20,7 @@ public sealed class UrnSgtinPatternParserStrategy(GS1CompanyPrefixProvider gcpPr
     {
         CompanyPrefixValidator.VerifyGcpLength(values["gcp"], gcpProvider);
 
-        return new SgtinPatternFormatter(
+        return new GtinPatternFormatter(
             indicator: values["indicator"],
             gcp: values["gcp"],
             itemRef: values["itemRef"]);

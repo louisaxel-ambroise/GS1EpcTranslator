@@ -20,7 +20,7 @@ public sealed class UpuiFormatter(string indicator, string gcp, string itemRef, 
         var elements = $"(01){indicator}{gcp}{itemRef}{checkDigit}(235){tpx}";
 
         return new(
-            Type: EpcType.UPUI, 
+            EpcType: EpcType.UPUI, 
             Raw: value, 
             Urn: urn,
             ElementString: elements,

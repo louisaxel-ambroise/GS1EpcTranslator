@@ -19,7 +19,7 @@ public sealed class SsccFormatter(string gcp, string serialRefRemainder, string 
         var elements = $"(00){extensionDigit}{gcp}{serialRefRemainder}{checkDigit}";
 
         return new(
-            Type: EpcType.SSCC, 
+            EpcType: EpcType.SSCC, 
             Raw: value, 
             Urn: urn,
             ElementString: elements,

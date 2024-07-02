@@ -22,7 +22,7 @@ public sealed class ItipFormatter(string gcp, string indicator, string itemRef, 
         var elements = $"(8006){indicator}{gcp}{itemRef}{checkDigit}{piece}{total}(21){serial}";
 
         return new(
-            Type: EpcType.ITIP, 
+            EpcType: EpcType.ITIP, 
             Raw: value, 
             Urn: urn,
             ElementString: elements,

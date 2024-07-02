@@ -19,7 +19,7 @@ public sealed class GraiFormatter(string gcp, string assetType, string serialNum
         var elements = $"(8003)0{gcp}{assetType}{checkDigit}{serialNumber}";
 
         return new(
-            Type: EpcType.GRAI, 
+            EpcType: EpcType.GRAI, 
             Raw: value, 
             Urn: urn,
             ElementString: elements,

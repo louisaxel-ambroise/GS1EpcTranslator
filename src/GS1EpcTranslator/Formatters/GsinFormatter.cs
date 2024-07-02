@@ -18,7 +18,7 @@ public sealed class GsinFormatter(string gcp, string shipperRef) : IEpcFormatter
         var elements = $"(401){gcp}{shipperRef}{checkDigit}";
 
         return new(
-            Type: EpcType.GSIN, 
+            EpcType: EpcType.GSIN, 
             Raw: value, 
             Urn: urn,
             ElementString: elements,

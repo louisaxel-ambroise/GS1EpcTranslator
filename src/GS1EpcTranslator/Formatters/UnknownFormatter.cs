@@ -25,7 +25,7 @@ public sealed class UnknownFormatter : IEpcFormatter
     public EpcResult Format(string value)
     {
         return new(
-            Type: EpcType.Unknown,
+            EpcType: EpcType.Unknown,
             Raw: value,
             Urn: string.Empty,
             ElementString: string.Empty,

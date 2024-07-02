@@ -19,7 +19,7 @@ public sealed class GdtiFormatter(string gcp, string documentType, string serial
         var elements = $"(253){gcp}{documentType}{checkDigit}{serial}";
 
         return new(
-            Type: EpcType.GDTI, 
+            EpcType: EpcType.GDTI, 
             Raw: value, 
             Urn: urn,
             ElementString: elements,

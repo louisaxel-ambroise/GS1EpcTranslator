@@ -17,7 +17,7 @@ public sealed class GincFormatter(string gcp, string consignmentRef) : IEpcForma
         var elements = $"(401){gcp}{consignmentRef}";
 
         return new(
-            Type: EpcType.GINC, 
+            EpcType: EpcType.GINC, 
             Raw: value, 
             Urn: urn,
             ElementString: elements,

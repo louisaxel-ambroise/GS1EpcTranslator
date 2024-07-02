@@ -18,7 +18,7 @@ public sealed class GsrnpFormatter(string gcp, string serviceReference) : IEpcFo
         var elements = $"(8017){gcp}{serviceReference}{checkDigit}";
 
         return new(
-            Type: EpcType.GSRNP, 
+            EpcType: EpcType.GSRNP, 
             Raw: value, 
             Urn: urn,
             ElementString: elements,

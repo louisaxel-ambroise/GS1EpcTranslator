@@ -17,7 +17,7 @@ public sealed class GiaiFormatter(string gcp, string assetRef) : IEpcFormatter
         var elements = $"(8004){gcp}{assetRef}";
 
         return new(
-            Type: EpcType.GIAI, 
+            EpcType: EpcType.GIAI, 
             Raw: value, 
             Urn: urn,
             ElementString: elements,

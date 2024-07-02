@@ -22,6 +22,6 @@ public sealed class DlSgtinPatternParserStrategy(GS1CompanyPrefixProvider compan
         var gcp = values["gtin"][..gcpLength];
         var gtin = values["gtin"][gcpLength..];
 
-        return new SgtinPatternFormatter(values["indicator"], gcp, gtin);
+        return new GtinPatternFormatter(values["indicator"], gcp, gtin);
     }
 }
