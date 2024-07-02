@@ -82,14 +82,20 @@ Example response
 ```json
 [
   {
-    "type": "SGLN",
+    "epcType": {
+      "code": "SGLN",
+      "serialized": true
+    },
     "raw": "urn:epc:id:sgln:871933301053..0",
     "urn": "urn:epc:id:sgln:871933301053..0",
     "elementString": "(414)8719333010535",
     "digitalLink": "https://id.gs1.org/414/8719333010535"
   },
   {
-    "type": "SGTIN",
+    "epcType": {
+      "code": "SGTIN",
+      "serialized": true
+    },
     "raw": "urn:epc:id:sgtin:0614141.107346.2017",
     "urn": "urn:epc:id:sgtin:0614141.107346.2017",
     "elementString": "(01)00614141107346(21)2017",
