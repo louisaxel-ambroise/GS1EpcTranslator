@@ -18,7 +18,7 @@ public sealed class UrnLgtinParserStrategy(GS1CompanyPrefixProvider gcpProvider)
     /// <returns>The <see cref="IEpcFormatter"/> for the LGTIN value</returns>
     public IEpcFormatter Transform(IDictionary<string, string> values)
     {
-        var lot = Alphanumeric.ToGraphicSymbol(values["lot"]);
+        var lot = values["lot"].ToGraphicSymbol();
         Alphanumeric.Validate(value: lot, maxLength: 20);
         CompanyPrefixValidator.VerifyGcpLength(values["gcp"], gcpProvider);
 

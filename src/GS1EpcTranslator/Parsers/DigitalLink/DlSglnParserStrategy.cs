@@ -21,7 +21,7 @@ public sealed class DlSglnParserStrategy(GS1CompanyPrefixProvider companyPrefixP
         var gcpLength = companyPrefixProvider.GetCompanyPrefixLength(values["sgln"]);
         var gcp = values["sgln"][..gcpLength];
         var locationRef = values["sgln"][gcpLength..];
-        var ext = Alphanumeric.ToGraphicSymbol(values["ext"]);
+        var ext = values["ext"].ToGraphicSymbol();
 
         Alphanumeric.Validate(ext);
         ArgumentOutOfRangeException.ThrowIfLessThan(gcpLength, 0);

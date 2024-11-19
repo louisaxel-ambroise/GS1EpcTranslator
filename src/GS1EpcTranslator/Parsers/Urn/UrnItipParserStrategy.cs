@@ -18,7 +18,7 @@ public sealed class UrnItipParserStrategy(GS1CompanyPrefixProvider gcpProvider) 
     /// <returns>The <see cref="IEpcFormatter"/> for the ITIP value</returns>
     public IEpcFormatter Transform(IDictionary<string, string> values)
     {
-        var serialNumber = Alphanumeric.ToGraphicSymbol(values["sn"]);
+        var serialNumber = values["sn"].ToGraphicSymbol();
 
         Alphanumeric.Validate(serialNumber, 28);
         CompanyPrefixValidator.VerifyGcpLength(values["gcp"], gcpProvider);

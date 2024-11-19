@@ -18,7 +18,7 @@ public sealed class UrnSglnParserStrategy(GS1CompanyPrefixProvider gcpProvider) 
     /// <returns>The <see cref="IEpcFormatter"/> for the SGLN value</returns>
     public IEpcFormatter Transform(IDictionary<string, string> values)
     {
-        var ext = Alphanumeric.ToGraphicSymbol(values["ext"]);
+        var ext = values["ext"].ToGraphicSymbol();
 
         Alphanumeric.Validate(ext);
         CompanyPrefixValidator.VerifyGcpLength(values["gcp"], gcpProvider);

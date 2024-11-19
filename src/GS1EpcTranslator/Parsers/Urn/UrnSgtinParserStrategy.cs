@@ -18,7 +18,7 @@ public sealed class UrnSgtinParserStrategy(GS1CompanyPrefixProvider gcpProvider)
     /// <returns>The <see cref="IEpcFormatter"/> for the SGTIN value</returns>
     public IEpcFormatter Transform(IDictionary<string, string> values)
     {
-        var ext = Alphanumeric.ToGraphicSymbol(values["ext"]);
+        var ext = values["ext"].ToGraphicSymbol();
         Alphanumeric.Validate(value: ext, maxLength: 20);
         CompanyPrefixValidator.VerifyGcpLength(values["gcp"], gcpProvider);
 

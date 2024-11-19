@@ -18,7 +18,7 @@ public sealed class UrnGiaiParserStrategy(GS1CompanyPrefixProvider gcpProvider) 
     /// <returns>The <see cref="IEpcFormatter"/> for the GIAI value</returns>
     public IEpcFormatter Transform(IDictionary<string, string> values)
     {
-        var assetRef = Alphanumeric.ToGraphicSymbol(values["assetRef"]);
+        var assetRef = values["assetRef"].ToGraphicSymbol();
 
         Alphanumeric.Validate(assetRef);
         CompanyPrefixValidator.VerifyGcpLength(values["gcp"], gcpProvider);

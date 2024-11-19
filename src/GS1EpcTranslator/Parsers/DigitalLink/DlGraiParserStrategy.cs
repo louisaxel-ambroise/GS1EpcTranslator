@@ -21,7 +21,7 @@ public sealed class DlGraiParserStrategy(GS1CompanyPrefixProvider companyPrefixP
         var gcpLength = companyPrefixProvider.GetCompanyPrefixLength(values["grai"]);
         var gcp = values["grai"][..gcpLength];
         var assetType = values["grai"][gcpLength..];
-        var serialNumber = Alphanumeric.ToGraphicSymbol(values["sn"]);
+        var serialNumber = values["sn"].ToGraphicSymbol();
 
         Alphanumeric.Validate(serialNumber);
         ArgumentOutOfRangeException.ThrowIfNotEqual(values["cd"], CheckDigit.Compute(values["grai"]));

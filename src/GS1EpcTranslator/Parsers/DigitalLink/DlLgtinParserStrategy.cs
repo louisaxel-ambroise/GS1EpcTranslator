@@ -21,7 +21,7 @@ public sealed class DlLgtinParserStrategy(GS1CompanyPrefixProvider companyPrefix
         var gcpLength = companyPrefixProvider.GetCompanyPrefixLength(values["gtin"]);
         var gcp = values["gtin"][..gcpLength];
         var itemRef = values["gtin"][gcpLength..];
-        var lot = Alphanumeric.ToGraphicSymbol(values["lot"]);
+        var lot = values["lot"].ToGraphicSymbol();
 
         Alphanumeric.Validate(value: lot, maxLength: 20);
 

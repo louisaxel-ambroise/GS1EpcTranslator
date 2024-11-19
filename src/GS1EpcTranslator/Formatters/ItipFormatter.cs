@@ -17,8 +17,8 @@ public sealed class ItipFormatter(string gcp, string indicator, string itemRef, 
     public EpcResult Format(string value)
     {
         var checkDigit = CheckDigit.Compute(indicator + gcp + itemRef);
-        var urn = $"urn:epc:id:itip:{gcp}.{indicator}{itemRef}.{piece}.{total}.{Alphanumeric.ToUriForm(serial)}";
-        var dl = $"https://id.gs1.org/8006/{indicator}{gcp}{itemRef}{checkDigit}{piece}{total}/21/{Alphanumeric.ToUriForm(serial)}";
+        var urn = $"urn:epc:id:itip:{gcp}.{indicator}{itemRef}.{piece}.{total}.{serial.ToUriForm()}";
+        var dl = $"https://id.gs1.org/8006/{indicator}{gcp}{itemRef}{checkDigit}{piece}{total}/21/{serial.ToUriForm()}";
         var elements = $"(8006){indicator}{gcp}{itemRef}{checkDigit}{piece}{total}(21){serial}";
 
         return new(

@@ -20,7 +20,7 @@ public sealed class DlGiaiParserStrategy(GS1CompanyPrefixProvider companyPrefixP
     {
         var gcpLength = companyPrefixProvider.GetCompanyPrefixLength(values["giai"]);
         var gcp = values["giai"][..gcpLength];
-        var assetRef = Alphanumeric.ToGraphicSymbol(values["giai"][gcpLength..]);
+        var assetRef = values["giai"][gcpLength..].ToGraphicSymbol();
 
         Alphanumeric.Validate(assetRef);
 

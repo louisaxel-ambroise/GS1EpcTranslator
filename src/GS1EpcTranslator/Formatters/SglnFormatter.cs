@@ -20,8 +20,8 @@ public sealed class SglnFormatter(string gcp, string locationRef, string ext) : 
 
         if (!string.IsNullOrEmpty(ext))
         {
-            dl += $"/254/{Alphanumeric.ToUriForm(ext)}";
-            urn += $".{Alphanumeric.ToUriForm(ext)}";
+            dl += $"/254/{ext.ToUriForm()}";
+            urn += $".{ext.ToUriForm()}";
             elements += $"(254){ext}";
         }
         else

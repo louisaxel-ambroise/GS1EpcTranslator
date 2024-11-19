@@ -14,8 +14,8 @@ public sealed class GdtiFormatter(string gcp, string documentType, string serial
     public EpcResult Format(string value)
     {
         var checkDigit = CheckDigit.Compute(gcp + documentType);
-        var urn = $"urn:epc:id:gsrn:{gcp}.{documentType}.{Alphanumeric.ToUriForm(serial)}";
-        var dl = $"https://id.gs1.org/253/{gcp}{documentType}{checkDigit}{Alphanumeric.ToUriForm(serial)}";
+        var urn = $"urn:epc:id:gsrn:{gcp}.{documentType}.{serial.ToUriForm()}";
+        var dl = $"https://id.gs1.org/253/{gcp}{documentType}{checkDigit}{serial.ToUriForm()}";
         var elements = $"(253){gcp}{documentType}{checkDigit}{serial}";
 
         return new(

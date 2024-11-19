@@ -21,7 +21,7 @@ public sealed class DlItipParserStrategy(GS1CompanyPrefixProvider companyPrefixP
         var gcpLength = companyPrefixProvider.GetCompanyPrefixLength(values["itip"]);
         var gcp = values["itip"][..gcpLength];
         var itemRef = values["itip"][gcpLength..];
-        var serialNumber = Alphanumeric.ToGraphicSymbol(values["sn"]);
+        var serialNumber = values["sn"].ToGraphicSymbol();
 
         Alphanumeric.Validate(serialNumber, 28);
         ArgumentOutOfRangeException.ThrowIfNotEqual(values["cd"], CheckDigit.Compute(values["indicator"] + values["itip"]));

@@ -15,12 +15,12 @@ builder.Services.AddSingleton<GS1EpcTranslatorContext>();
 
 var parserStrategies = typeof(IEpcParserStrategy)
     .Assembly.GetTypes()
-    .Where(typeof(IEpcParserStrategy).IsAssignableFrom)
-    .Where(x => x.IsClass && !x.IsAbstract);
+    .Where(x => x.IsClass && !x.IsAbstract)
+    .Where(typeof(IEpcParserStrategy).IsAssignableFrom);
 
+// Register all the parser strategies as singleton
 foreach(var parserStrategy in parserStrategies)
 {
-    // Register all the parser strategies as singleton
     builder.Services.AddSingleton(typeof(IEpcParserStrategy), parserStrategy);
 }
 

@@ -12,8 +12,8 @@ public sealed class GiaiFormatter(string gcp, string assetRef) : IEpcFormatter
     /// <inheritdoc/>
     public EpcResult Format(string value)
     {
-        var urn = $"urn:epc:id:giai:{gcp}.{Alphanumeric.ToUriForm(assetRef)}";
-        var dl = $"https://id.gs1.org/8004/{gcp}{Alphanumeric.ToUriForm(assetRef)}";
+        var urn = $"urn:epc:id:giai:{gcp}.{assetRef.ToUriForm()}";
+        var dl = $"https://id.gs1.org/8004/{gcp}{assetRef.ToUriForm()}";
         var elements = $"(8004){gcp}{assetRef}";
 
         return new(

@@ -13,6 +13,7 @@ public interface IEpcParserStrategy
     /// The Regex pattern of the specific EPC format
     /// </summary>
     string Pattern { get; }
+
     /// <summary>
     /// Method that parses all the different parts of the EPC and creates the appropriate <see cref="IEpcFormatter"/>
     /// </summary>

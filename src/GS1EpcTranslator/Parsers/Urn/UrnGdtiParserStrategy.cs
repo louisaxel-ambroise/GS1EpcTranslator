@@ -18,7 +18,7 @@ public sealed class UrnGdtiParserStrategy(GS1CompanyPrefixProvider gcpProvider) 
     /// <returns>The <see cref="IEpcFormatter"/> for the GDTI value</returns>
     public IEpcFormatter Transform(IDictionary<string, string> values)
     {
-        var serial = Alphanumeric.ToGraphicSymbol(values["serial"]);
+        var serial = values["serial"].ToGraphicSymbol();
 
         Alphanumeric.Validate(serial, 17);
         CompanyPrefixValidator.VerifyGcpLength(values["gcp"], gcpProvider);

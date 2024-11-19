@@ -15,9 +15,9 @@ public sealed class LgtinFormatter(string indicator, string gcp, string itemRef,
     public EpcResult Format(string value)
     {
         var checkDigit = CheckDigit.Compute(indicator + gcp + itemRef);
-        var urn = $"urn:epc:id:lgtin:{gcp}.{indicator}{itemRef}.{Alphanumeric.ToUriForm(lot)}";
+        var urn = $"urn:epc:id:lgtin:{gcp}.{indicator}{itemRef}.{lot.ToUriForm()}";
         var elementString = $"(01){indicator}{gcp}{itemRef}{checkDigit}(10){lot}";
-        var dl = $"https://id.gs1.org/01/{indicator}{gcp}{itemRef}{checkDigit}/10/{Alphanumeric.ToUriForm(lot)}";
+        var dl = $"https://id.gs1.org/01/{indicator}{gcp}{itemRef}{checkDigit}/10/{lot.ToUriForm()}";
 
         return new(EpcType.LGTIN, value, urn, elementString, dl);
     }

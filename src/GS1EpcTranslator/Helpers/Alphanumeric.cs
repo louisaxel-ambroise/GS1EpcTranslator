@@ -4,8 +4,8 @@ namespace GS1EpcTranslator.Helpers;
 
 public static class Alphanumeric
 {
-    public static string ToGraphicSymbol(string value) => HttpUtility.UrlDecode(value);
-    public static string ToUriForm(string value) => HttpUtility.UrlEncode(value);
+    public static string ToGraphicSymbol(this string value) => HttpUtility.UrlDecode(value);
+    public static string ToUriForm(this string value) => HttpUtility.UrlEncode(value);
 
     public static void Validate(string value, int maxLength = 1024)
     {
