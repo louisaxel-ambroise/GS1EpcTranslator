@@ -3,23 +3,25 @@ using Microsoft.Extensions.Options;
 
 namespace Gs1EpcTranslator.Api;
 
-public sealed class CompanyPrefixBackgroundLoader : IHostedService, IDisposable
+public sealed class CompanyPrefixBackgroundLoader : IHostedService
 {
+    private readonly TimeSpan _refreshDelay;
     private readonly GS1CompanyPrefixProvider _gcpProvider;
     private readonly HttpClient _httpClient;
     private readonly Timer _timer;
 
     public CompanyPrefixBackgroundLoader(GS1CompanyPrefixProvider gcpProvider, IOptions<CompanyPrefixOptions> options)
     {
-        var refreshDelay = TimeSpan.FromMinutes(options.Value.RefreshDelayInMinutes);
-
+        _refreshDelay = TimeSpan.FromMinutes(options.Value.RefreshDelayInMinutes);
         _gcpProvider = gcpProvider;
         _httpClient = new HttpClient { BaseAddress = new Uri(options.Value.Url) };
-        _timer = new(LoadCompanyPrefixes, null, TimeSpan.Zero, refreshDelay);
+        _timer = new(LoadCompanyPrefixes, null, Timeout.InfiniteTimeSpan, Timeout.InfiniteTimeSpan);
     }
 
     public Task StartAsync(CancellationToken stoppingToken)
     {
+        _timer.Change(TimeSpan.Zero, _refreshDelay);
+
         return Task.CompletedTask;
     }
 
@@ -36,11 +38,10 @@ public sealed class CompanyPrefixBackgroundLoader : IHostedService, IDisposable
     public Task StopAsync(CancellationToken stoppingToken)
     {
         _timer.Change(Timeout.InfiniteTimeSpan, Timeout.InfiniteTimeSpan);
+        _timer.Dispose();
 
         return Task.CompletedTask;
     }
-
-    public void Dispose() => _timer.Dispose();
 
     public sealed class CompanyPrefixOptions
     {

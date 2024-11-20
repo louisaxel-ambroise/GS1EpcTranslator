@@ -29,7 +29,7 @@ public static class GS1CompanyPrefixLoader
     {
         var buffer = new byte[256];
         var reader = default(Utf8JsonReader);
-        var status = default(int);
+        var status = GcpState.Unknown;
         var prefix = string.Empty;
         var length = -1;
 
@@ -43,25 +43,25 @@ public static class GS1CompanyPrefixLoader
             {
                 switch (reader.TokenType)
                 {
-                    case JsonTokenType.PropertyName when TryParseGcpState(reader.GetString(), out int state):
+                    case JsonTokenType.PropertyName when Enum.TryParse(reader.GetString(), true, out GcpState state):
                         status |= state;
                         break;
 
                     // If the Prefix flag is set the latest token read must be a string (prefix of the next GCP)
-                    case JsonTokenType.String when HasFlag(status, GcpState.Prefix):
+                    case JsonTokenType.String when status.HasFlag(GcpState.Prefix):
                         prefix = reader.GetString()!;
                         status ^= GcpState.Prefix;
                         break;
 
                     // If the GcpLength flag is set the next token must be the GCP prefix length (int)
-                    case JsonTokenType.Number when HasFlag(status, GcpState.GcpLength):
+                    case JsonTokenType.Number when status.HasFlag(GcpState.GcpLength):
                         length = reader.GetInt32();
                         status ^= GcpState.GcpLength;
                         break;
 
                     // A close object in the Entry context (array) indicates that both the prefix and length of the 
                     // GCP were parsed. We can then safely load it into the Provider.
-                    case JsonTokenType.EndObject when HasFlag(status, GcpState.Entry):
+                    case JsonTokenType.EndObject when status.HasFlag(GcpState.Entry):
                         provider.SetPrefix(prefix, length);
                         prefix = string.Empty;
                         length = -1;
@@ -69,33 +69,19 @@ public static class GS1CompanyPrefixLoader
 
                     // End of array while in the "entry" property means we reach the end of the GCP length list.
                     // We can exit from the function and discard the rest of the stream
-                    case JsonTokenType.EndArray when HasFlag(status, GcpState.Entry):
+                    case JsonTokenType.EndArray when status.HasFlag(GcpState.Entry):
                         return;
                 }
             }
         }
     }
 
-    public static bool HasFlag(int status, int flag) => (status & flag) != 0x00;
-
-    public static bool TryParseGcpState(string value, out int state)
+    public enum GcpState : byte
     {
-        state = value.ToLower() switch
-        {
-            "entry" => GcpState.Entry,
-            "prefix" => GcpState.Prefix,
-            "gcplength" => GcpState.GcpLength,
-            _ => 0x00,
-        };
-
-        return state != 0x00;
-    }
-
-    public static class GcpState
-    {
-        public const int Entry = 0x01;
-        public const int Prefix = 0x02;
-        public const int GcpLength = 0x04;
+        Unknown = 0x00,
+        Entry = 0x01,
+        Prefix = 0x02,
+        GcpLength = 0x04
     }
 
     /// <summary>
