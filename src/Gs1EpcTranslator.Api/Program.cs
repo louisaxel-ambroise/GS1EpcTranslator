@@ -3,9 +3,9 @@ using GS1EpcTranslator.Parsers;
 using Microsoft.AspNetCore.Mvc;
 using GS1CompanyPrefix;
 using GS1EpcTranslator.Formatters;
-using Gs1EpcTranslator.Api;
 using System.Text.Json.Serialization;
 using System.Reflection;
+using Gs1EpcTranslator.Api.HostedServices;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -24,9 +24,8 @@ foreach(var parserStrategy in parserStrategies)
     builder.Services.AddSingleton(typeof(IEpcParserStrategy), parserStrategy);
 }
 
-var options = builder.Configuration.GetSection(nameof(CompanyPrefixBackgroundLoader.CompanyPrefixOptions));
-builder.Services.Configure<CompanyPrefixBackgroundLoader.CompanyPrefixOptions>(options);
-builder.Services.AddHostedService<CompanyPrefixBackgroundLoader>();
+builder.Services.Configure<CompanyPrefixLoaderHostedServices.CompanyPrefixOptions>(nameof(CompanyPrefixLoaderHostedServices.CompanyPrefixOptions), builder.Configuration);
+builder.Services.AddHostedService<CompanyPrefixLoaderHostedServices>();
 
 var app = builder.Build();
 

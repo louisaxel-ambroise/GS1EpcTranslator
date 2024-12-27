@@ -1,16 +1,16 @@
 ﻿using GS1CompanyPrefix;
 using Microsoft.Extensions.Options;
 
-namespace Gs1EpcTranslator.Api;
+namespace Gs1EpcTranslator.Api.HostedServices;
 
-public sealed class CompanyPrefixBackgroundLoader : IHostedService
+public sealed class CompanyPrefixLoaderHostedServices : IHostedService
 {
     private readonly TimeSpan _refreshDelay;
     private readonly GS1CompanyPrefixProvider _gcpProvider;
     private readonly HttpClient _httpClient;
     private readonly Timer _timer;
 
-    public CompanyPrefixBackgroundLoader(GS1CompanyPrefixProvider gcpProvider, IOptions<CompanyPrefixOptions> options)
+    public CompanyPrefixLoaderHostedServices(GS1CompanyPrefixProvider gcpProvider, IOptions<CompanyPrefixOptions> options)
     {
         _refreshDelay = TimeSpan.FromMinutes(options.Value.RefreshDelayInMinutes);
         _gcpProvider = gcpProvider;

@@ -34,7 +34,7 @@ public sealed class GS1CompanyPrefixProvider
         // This last condition is only a safety measure as we must have exited the tree before that.
         for (var i = 0; i < 12 && !current.IsLeaf; i++)
         {
-            var charIndex = value[i] - '0';
+            var charIndex = value[i] - Zero;
             current = current[charIndex];
         }
 
@@ -57,7 +57,7 @@ public sealed class GS1CompanyPrefixProvider
         // of the prefix does not contain any Leaf node.
         for (i = 0; i < prefix.Length - 1; i++)
         {
-            var charIndex = prefix[i] - '0';
+            var charIndex = prefix[i] - Zero;
 
             // If the next value is a leaf convert it to a default Node.
             if (current[charIndex].IsLeaf)
@@ -71,8 +71,10 @@ public sealed class GS1CompanyPrefixProvider
 
         // At that point i contains the latest value of the GCP, so we set the child
         // of the current node to a Leaf node with the length value.
-        current[prefix[i] - '0'] = Node.Leaf(length);
+        current[prefix[i] - Zero] = Node.Leaf(length);
     }
+
+    private const char Zero = '0';
 
     /// <summary>
     /// A Node holds a specific value for a goven character in a GCP path.
@@ -80,7 +82,7 @@ public sealed class GS1CompanyPrefixProvider
     /// Nodes for each character between '0' and '9'.
     /// or a leaf that contains the GCP length for the current path.
     /// </summary>
-    private sealed class Node
+    private sealed record Node
     {
         private readonly Node[] _children;
         private readonly int _length = -1;

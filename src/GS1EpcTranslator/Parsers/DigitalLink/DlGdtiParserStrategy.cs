@@ -24,7 +24,7 @@ public sealed class DlGdtiParserStrategy(GS1CompanyPrefixProvider companyPrefixP
         var serial = values["serial"].ToGraphicSymbol();
 
         Alphanumeric.Validate(serial, 17);
-        ArgumentOutOfRangeException.ThrowIfNotEqual(values["cd"], CheckDigit.Compute(values["gsrn"]));
+        ArgumentOutOfRangeException.ThrowIfNotEqual(values["cd"], CheckDigit.Compute(values["gdti"]));
 
         return new GdtiFormatter(
             gcp: gcp,

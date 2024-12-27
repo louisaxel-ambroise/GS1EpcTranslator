@@ -11,4 +11,8 @@
     <ProjectReference Include="..\GS1EpcTranslator\GS1EpcTranslator.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="NewFolder\" />
+  </ItemGroup>
+
 </Project>
