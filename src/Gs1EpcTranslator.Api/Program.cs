@@ -6,6 +6,7 @@ using GS1EpcTranslator.Formatters;
 using System.Text.Json.Serialization;
 using System.Reflection;
 using Gs1EpcTranslator.Api.HostedServices;
+using static Gs1EpcTranslator.Api.HostedServices.CompanyPrefixLoaderHostedServices;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -24,7 +25,7 @@ foreach(var parserStrategy in parserStrategies)
     builder.Services.AddSingleton(typeof(IEpcParserStrategy), parserStrategy);
 }
 
-builder.Services.Configure<CompanyPrefixLoaderHostedServices.CompanyPrefixOptions>(nameof(CompanyPrefixLoaderHostedServices.CompanyPrefixOptions), builder.Configuration);
+builder.Services.Configure<CompanyPrefixOptions>(builder.Configuration.GetSection(nameof(CompanyPrefixOptions)));
 builder.Services.AddHostedService<CompanyPrefixLoaderHostedServices>();
 
 var app = builder.Build();
