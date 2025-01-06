@@ -19,7 +19,7 @@ public sealed class GS1EpcTranslatorContext(IEnumerable<IEpcParserStrategy> stra
     /// <param name="value">The Epc value to parse</param>
     /// <param name="result">The first matching Formatter</param>
     /// <returns>If a strategy matched the value</returns>
-    public bool TryParse(string value, out IEpcFormatter result)
+    public bool TryParse(string value, out IEpcIdentifier result)
     {
         foreach(var strategy in strategies) 
         {
@@ -29,7 +29,7 @@ public sealed class GS1EpcTranslatorContext(IEnumerable<IEpcParserStrategy> stra
             }
         }
 
-        result = UnknownFormatter.Value;
+        result = Unknown.Value;
         return false;
     }
 }

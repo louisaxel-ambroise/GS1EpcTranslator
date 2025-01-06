@@ -12,18 +12,18 @@ public sealed class UrnSsccParserStrategy(GS1CompanyPrefixProvider gcpProvider) 
     public string Pattern => "^urn:epc:id:sscc:(?<gcp>\\d{6,12})\\.(?<serialRef>\\d{5,11})(?<=[\\d\\.]{18})$";
 
     /// <summary>
-    /// Transforms the URN SSCC parsed values into a <see cref="IEpcFormatter"/>
+    /// Transforms the URN SSCC parsed values into a <see cref="IEpcIdentifier"/>
     /// </summary>
     /// <param name="values">The values retrieved from the regex match</param>
-    /// <returns>The <see cref="IEpcFormatter"/> for the SSCC value</returns>
-    public IEpcFormatter Transform(IDictionary<string, string> values)
+    /// <returns>The <see cref="IEpcIdentifier"/> for the SSCC value</returns>
+    public IEpcIdentifier Transform(IDictionary<string, string> values)
     {
         CompanyPrefixValidator.VerifyGcpLength(values["gcp"], gcpProvider);
 
         var extensionDigit = values["serialRef"][..1];
         var serialRefRemainder = values["serialRef"][1..];
 
-        return new SsccFormatter(
+        return new Sscc(
             gcp: values["gcp"],
             serialRefRemainder: serialRefRemainder,
             extensionDigit: extensionDigit);

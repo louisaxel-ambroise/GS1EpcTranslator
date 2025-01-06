@@ -12,15 +12,15 @@ public sealed class UrnCpiParserStrategy(GS1CompanyPrefixProvider gcpProvider) :
     public string Pattern => "^urn:epc:id:cpi:(?<gcp>\\d{6,12})\\.(?<componentType>\\d{1,24})(?<=[\\d\\.]{2,31}).(?<serial>\\d{1,12})$";
 
     /// <summary>
-    /// Transforms the URN CPI parsed values into a <see cref="IEpcFormatter"/>
+    /// Transforms the URN CPI parsed values into a <see cref="IEpcIdentifier"/>
     /// </summary>
     /// <param name="values">The values retrieved from the regex match</param>
-    /// <returns>The <see cref="IEpcFormatter"/> for the CPI value</returns>
-    public IEpcFormatter Transform(IDictionary<string, string> values)
+    /// <returns>The <see cref="IEpcIdentifier"/> for the CPI value</returns>
+    public IEpcIdentifier Transform(IDictionary<string, string> values)
     {
         CompanyPrefixValidator.VerifyGcpLength(values["gcp"], gcpProvider);
 
-        return new CpiFormatter(
+        return new Cpi(
             gcp: values["gcp"],
             componentType: values["componentType"],
             serial: values["serial"]);

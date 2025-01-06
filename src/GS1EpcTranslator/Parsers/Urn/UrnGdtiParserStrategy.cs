@@ -12,18 +12,18 @@ public sealed class UrnGdtiParserStrategy(GS1CompanyPrefixProvider gcpProvider) 
     public string Pattern => "^urn:epc:id:gdti:(?<gcp>\\d{6,12})\\.(?<documentType>\\d{0,6})(?<=[\\d\\.]{13}).(?<serial>.+)$";
 
     /// <summary>
-    /// Transforms the URN GDTI parsed values into a <see cref="IEpcFormatter"/>
+    /// Transforms the URN GDTI parsed values into a <see cref="IEpcIdentifier"/>
     /// </summary>
     /// <param name="values">The values retrieved from the regex match</param>
-    /// <returns>The <see cref="IEpcFormatter"/> for the GDTI value</returns>
-    public IEpcFormatter Transform(IDictionary<string, string> values)
+    /// <returns>The <see cref="IEpcIdentifier"/> for the GDTI value</returns>
+    public IEpcIdentifier Transform(IDictionary<string, string> values)
     {
         var serial = values["serial"].ToGraphicSymbol();
 
         Alphanumeric.Validate(serial, 17);
         CompanyPrefixValidator.VerifyGcpLength(values["gcp"], gcpProvider);
 
-        return new GdtiFormatter(
+        return new Gdti(
             gcp: values["gcp"],
             documentType: values["documentType"],
             serial: serial);

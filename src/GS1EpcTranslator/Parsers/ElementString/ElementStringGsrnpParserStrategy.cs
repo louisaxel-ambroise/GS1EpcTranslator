@@ -12,11 +12,11 @@ public sealed class ElementStringGsrnpParserStrategy(GS1CompanyPrefixProvider co
     public string Pattern => "^\\(8017\\)(?<gsrn>\\d{17})(?<cd>\\d)$";
 
     /// <summary>
-    /// Transforms the ElementString GSRNP parsed values into a <see cref="IEpcFormatter"/>
+    /// Transforms the ElementString GSRNP parsed values into a <see cref="IEpcIdentifier"/>
     /// </summary>
     /// <param name="values">The values retrieved from the regex match</param>
-    /// <returns>The <see cref="IEpcFormatter"/> for the GSRNP value</returns>
-    public IEpcFormatter Transform(IDictionary<string, string> values)
+    /// <returns>The <see cref="IEpcIdentifier"/> for the GSRNP value</returns>
+    public IEpcIdentifier Transform(IDictionary<string, string> values)
     {
         var gcpLength = companyPrefixProvider.GetCompanyPrefixLength(values["gsrn"]);
         var gcp = values["gsrn"][..gcpLength];
@@ -25,7 +25,7 @@ public sealed class ElementStringGsrnpParserStrategy(GS1CompanyPrefixProvider co
         ArgumentOutOfRangeException.ThrowIfLessThan(gcpLength, 0);
         ArgumentOutOfRangeException.ThrowIfNotEqual(values["cd"], CheckDigit.Compute(values["gsrn"]));
 
-        return new GsrnpFormatter(
+        return new Gsrnp(
             gcp: gcp, 
             serviceReference: serviceReference);
     }

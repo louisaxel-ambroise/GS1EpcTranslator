@@ -12,11 +12,11 @@ public sealed class DlUpuiParserStrategy(GS1CompanyPrefixProvider companyPrefixP
     public string Pattern => "^https?://.*/01/(?<indicator>\\d)(?<upui>\\d{12})(?<cd>\\d)/235/(?<tpx>.{1,28})$";
 
     /// <summary>
-    /// Transforms the DigitalLink UPUI parsed values into a <see cref="IEpcFormatter"/>
+    /// Transforms the DigitalLink UPUI parsed values into a <see cref="IEpcIdentifier"/>
     /// </summary>
     /// <param name="values">The values retrieved from the regex match</param>
-    /// <returns>The <see cref="IEpcFormatter"/> for the UPUI value</returns>
-    public IEpcFormatter Transform(IDictionary<string, string> values)
+    /// <returns>The <see cref="IEpcIdentifier"/> for the UPUI value</returns>
+    public IEpcIdentifier Transform(IDictionary<string, string> values)
     {
         var gcpLength = companyPrefixProvider.GetCompanyPrefixLength(values["upui"]);
         var gcp = values["upui"][..gcpLength];
@@ -24,7 +24,7 @@ public sealed class DlUpuiParserStrategy(GS1CompanyPrefixProvider companyPrefixP
 
         ArgumentOutOfRangeException.ThrowIfNotEqual(values["cd"], CheckDigit.Compute(values["indicator"] + values["upui"]));
 
-        return new UpuiFormatter(
+        return new Upui(
             indicator: values["indicator"],
             gcp: gcp, 
             itemRef: itemRef,

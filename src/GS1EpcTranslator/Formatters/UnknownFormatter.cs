@@ -5,17 +5,17 @@ namespace GS1EpcTranslator.Formatters;
 /// <summary>
 /// Default formatter for Epc in an unknown format
 /// </summary>
-public sealed class UnknownFormatter : IEpcFormatter
+public sealed class Unknown : IEpcIdentifier
 {
     /// <summary>
     /// Prevent to create instances
     /// </summary>
-    private UnknownFormatter() { }
+    private Unknown() { }
 
     /// <summary>
     /// Unique instance of the unknown formatter
     /// </summary>
-    public static UnknownFormatter Value => new();
+    public static Unknown Value => new();
 
     /// <summary>
     /// Returns only the value, as the Epc is not a known format

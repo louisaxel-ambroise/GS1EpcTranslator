@@ -7,7 +7,7 @@ namespace GS1EpcTranslator.Formatters;
 /// </summary>
 /// <param name="gcp">The GS1 Company Prefix</param>
 /// <param name="consignmentRef">The serialRef remainder</param>
-public sealed class GincFormatter(string gcp, string consignmentRef) : IEpcFormatter
+public sealed class Ginc(string gcp, string consignmentRef) : IEpcIdentifier
 {
     /// <inheritdoc/>
     public EpcResult Format(string value)

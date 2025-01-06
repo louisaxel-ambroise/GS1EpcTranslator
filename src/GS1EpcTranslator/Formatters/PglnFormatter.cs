@@ -7,7 +7,7 @@ namespace GS1EpcTranslator.Formatters;
 /// </summary>
 /// <param name="gcp">The company prefix</param>
 /// <param name="partyRef">The partyRef</param>
-public sealed class PglnFormatter(string gcp, string partyRef) : IEpcFormatter
+public sealed class Pgln(string gcp, string partyRef) : IEpcIdentifier
 {
     /// <inheritdoc/>
     public EpcResult Format(string value)

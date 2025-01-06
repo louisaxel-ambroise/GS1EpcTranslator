@@ -12,11 +12,11 @@ public sealed class ElementStringGsinParserStrategy(GS1CompanyPrefixProvider com
     public string Pattern => "^\\(402\\)(?<gsin>\\d{16})(?<cd>\\d)$";
 
     /// <summary>
-    /// Transforms the ElementString GSIN parsed values into a <see cref="IEpcFormatter"/>
+    /// Transforms the ElementString GSIN parsed values into a <see cref="IEpcIdentifier"/>
     /// </summary>
     /// <param name="values">The values retrieved from the regex match</param>
-    /// <returns>The <see cref="IEpcFormatter"/> for the GSIN value</returns>
-    public IEpcFormatter Transform(IDictionary<string, string> values)
+    /// <returns>The <see cref="IEpcIdentifier"/> for the GSIN value</returns>
+    public IEpcIdentifier Transform(IDictionary<string, string> values)
     {
         var gcpLength = companyPrefixProvider.GetCompanyPrefixLength(values["gsin"]);
         var gcp = values["gsin"][..gcpLength];
@@ -24,7 +24,7 @@ public sealed class ElementStringGsinParserStrategy(GS1CompanyPrefixProvider com
 
         ArgumentOutOfRangeException.ThrowIfNotEqual(values["cd"], CheckDigit.Compute(values["gsin"]));
 
-        return new GsinFormatter(
+        return new Gsin(
             gcp: gcp,
             shipperRef: shipperRef);
     }

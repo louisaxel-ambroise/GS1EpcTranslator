@@ -12,11 +12,11 @@ public sealed class DlGdtiParserStrategy(GS1CompanyPrefixProvider companyPrefixP
     public string Pattern => "^(?<domain>https?://.*)/(253|gdti)/(?<gdti>\\d{12})(?<cd>\\d)(?<serial>.+)$";
 
     /// <summary>
-    /// Transforms the DigitalLink GDTI parsed values into a <see cref="IEpcFormatter"/>
+    /// Transforms the DigitalLink GDTI parsed values into a <see cref="IEpcIdentifier"/>
     /// </summary>
     /// <param name="values">The values retrieved from the regex match</param>
-    /// <returns>The <see cref="IEpcFormatter"/> for the GDTI value</returns>
-    public IEpcFormatter Transform(IDictionary<string, string> values)
+    /// <returns>The <see cref="IEpcIdentifier"/> for the GDTI value</returns>
+    public IEpcIdentifier Transform(IDictionary<string, string> values)
     {
         var gcpLength = companyPrefixProvider.GetCompanyPrefixLength(values["gdti"]);
         var gcp = values["gdti"][..gcpLength];
@@ -26,7 +26,7 @@ public sealed class DlGdtiParserStrategy(GS1CompanyPrefixProvider companyPrefixP
         Alphanumeric.Validate(serial, 17);
         ArgumentOutOfRangeException.ThrowIfNotEqual(values["cd"], CheckDigit.Compute(values["gdti"]));
 
-        return new GdtiFormatter(
+        return new Gdti(
             gcp: gcp,
             documentType: documentType,
             serial: serial);

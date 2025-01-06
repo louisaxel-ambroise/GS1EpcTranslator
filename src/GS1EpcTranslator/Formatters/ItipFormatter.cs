@@ -11,7 +11,7 @@ namespace GS1EpcTranslator.Formatters;
 /// <param name="piece">The piece number</param>
 /// <param name="totla">The total number of pieces</param>
 /// <param name="serial">The serial</param>
-public sealed class ItipFormatter(string gcp, string indicator, string itemRef, string piece, string total, string serial) : IEpcFormatter
+public sealed class Itip(string gcp, string indicator, string itemRef, string piece, string total, string serial) : IEpcIdentifier
 {
     /// <inheritdoc/>
     public EpcResult Format(string value)

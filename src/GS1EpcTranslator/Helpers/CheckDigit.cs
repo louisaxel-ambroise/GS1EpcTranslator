@@ -12,16 +12,8 @@ public static class CheckDigit
     /// <returns>The check digit (single digit value)</returns>
     public static string Compute(string value)
     {
-        var weightedSum = 0;
+        var weightedSum = value.Select((c, i) => (c - '0') * (3 - (i % 2)*2)).Sum();
 
-        for (var i = 0; i < value.Length; i++)
-        {
-            var weight = i % 2 == 0 ? 3 : 1;
-            weightedSum += (value[i] - '0') * weight;
-        }
-
-        var checkDigit = (10 - weightedSum % 10);
-
-        return $"{checkDigit % 10}";
+        return $"{(10 - weightedSum % 10) % 10}";
     }
 }

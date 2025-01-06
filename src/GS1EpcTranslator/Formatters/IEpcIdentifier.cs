@@ -5,7 +5,7 @@ namespace GS1EpcTranslator.Formatters;
 /// <summary>
 /// Interface shared by all the Epc formatters
 /// </summary>
-public interface IEpcFormatter
+public interface IEpcIdentifier
 {
     /// <summary>
     /// Returns an <see cref="EpcResult"/> that represents the specified value

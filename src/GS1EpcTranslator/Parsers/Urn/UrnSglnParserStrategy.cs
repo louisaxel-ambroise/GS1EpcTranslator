@@ -12,18 +12,18 @@ public sealed class UrnSglnParserStrategy(GS1CompanyPrefixProvider gcpProvider) 
     public string Pattern => "^urn:epc:id:sgln:(?<gcp>\\d{6,12})\\.(?<locationRef>\\d{0,6})(?<=[\\d\\.]{13})\\.(0|(?<ext>.+))$";
 
     /// <summary>
-    /// Transforms the URN SGLN parsed values into a <see cref="IEpcFormatter"/>
+    /// Transforms the URN SGLN parsed values into a <see cref="IEpcIdentifier"/>
     /// </summary>
     /// <param name="values">The values retrieved from the regex match</param>
-    /// <returns>The <see cref="IEpcFormatter"/> for the SGLN value</returns>
-    public IEpcFormatter Transform(IDictionary<string, string> values)
+    /// <returns>The <see cref="IEpcIdentifier"/> for the SGLN value</returns>
+    public IEpcIdentifier Transform(IDictionary<string, string> values)
     {
         var ext = values["ext"].ToGraphicSymbol();
 
         Alphanumeric.Validate(ext);
         CompanyPrefixValidator.VerifyGcpLength(values["gcp"], gcpProvider);
 
-        return new SglnFormatter(
+        return new Sgln(
             gcp: values["gcp"],
             locationRef: values["locationRef"],
             ext: ext);

@@ -8,7 +8,7 @@ namespace GS1EpcTranslator.Formatters;
 /// <param name="gcp">The company prefix</param>
 /// <param name="couponRef">The couponRef</param>
 /// <param name="serial">The serial</param>
-public sealed class SgcnFormatter(string gcp, string couponRef, string serial) : IEpcFormatter
+public sealed class Sgcn(string gcp, string couponRef, string serial) : IEpcIdentifier
 {
     /// <inheritdoc/>
     public EpcResult Format(string value)

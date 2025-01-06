@@ -12,18 +12,18 @@ public sealed class UrnGiaiParserStrategy(GS1CompanyPrefixProvider gcpProvider) 
     public string Pattern => "^urn:epc:id:giai:(?<gcp>\\d{6,12})\\.(?<assetRef>.*)$";
 
     /// <summary>
-    /// Transforms the URN GIAI parsed values into a <see cref="IEpcFormatter"/>
+    /// Transforms the URN GIAI parsed values into a <see cref="IEpcIdentifier"/>
     /// </summary>
     /// <param name="values">The values retrieved from the regex match</param>
-    /// <returns>The <see cref="IEpcFormatter"/> for the GIAI value</returns>
-    public IEpcFormatter Transform(IDictionary<string, string> values)
+    /// <returns>The <see cref="IEpcIdentifier"/> for the GIAI value</returns>
+    public IEpcIdentifier Transform(IDictionary<string, string> values)
     {
         var assetRef = values["assetRef"].ToGraphicSymbol();
 
         Alphanumeric.Validate(assetRef);
         CompanyPrefixValidator.VerifyGcpLength(values["gcp"], gcpProvider);
 
-        return new GiaiFormatter(
+        return new Giai(
             gcp: values["gcp"],
             assetRef: assetRef);
     }

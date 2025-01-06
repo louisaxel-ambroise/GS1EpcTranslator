@@ -12,11 +12,11 @@ public sealed class ElementStringLgtinParserStrategy(GS1CompanyPrefixProvider co
     public string Pattern => "^\\(01\\)(?<indicator>\\d)(?<gtin>\\d{13})\\(10\\)(?<lot>.{1,20})$";
 
     /// <summary>
-    /// Transforms the ElementString LGTIN parsed values into a <see cref="IEpcFormatter"/>
+    /// Transforms the ElementString LGTIN parsed values into a <see cref="IEpcIdentifier"/>
     /// </summary>
     /// <param name="values">The values retrieved from the regex match</param>
-    /// <returns>The <see cref="IEpcFormatter"/> for the LGTIN value</returns>
-    public IEpcFormatter Transform(IDictionary<string, string> values)
+    /// <returns>The <see cref="IEpcIdentifier"/> for the LGTIN value</returns>
+    public IEpcIdentifier Transform(IDictionary<string, string> values)
     {
         var gcpLength = companyPrefixProvider.GetCompanyPrefixLength(values["gtin"]);
         var gcp = values["gtin"][..gcpLength];
@@ -24,7 +24,7 @@ public sealed class ElementStringLgtinParserStrategy(GS1CompanyPrefixProvider co
 
         Alphanumeric.Validate(values["lot"]);
 
-        return new LgtinFormatter(
+        return new Lgtin(
             indicator: values["indicator"],
             gcp: gcp, 
             itemRef: itemRef, 

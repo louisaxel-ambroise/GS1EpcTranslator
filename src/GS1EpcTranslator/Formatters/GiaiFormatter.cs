@@ -7,7 +7,7 @@ namespace GS1EpcTranslator.Formatters;
 /// </summary>
 /// <param name="gcp">The GS1 Company Prefix</param>
 /// <param name="assetRef">The serialRef remainder</param>
-public sealed class GiaiFormatter(string gcp, string assetRef) : IEpcFormatter
+public sealed class Giai(string gcp, string assetRef) : IEpcIdentifier
 {
     /// <inheritdoc/>
     public EpcResult Format(string value)

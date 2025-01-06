@@ -8,7 +8,7 @@ namespace GS1EpcTranslator.Formatters;
 /// <param name="indicator">The indicator</param>
 /// <param name="gcp">The GS1 Company Prefix</param>
 /// <param name="itemRef">The itemRef</param>
-public sealed class SgtinPatternFormatter(string indicator, string gcp, string itemRef) : IEpcFormatter
+public sealed class SgtinPattern(string indicator, string gcp, string itemRef) : IEpcIdentifier
 {
     /// <inheritdoc/>
     public EpcResult Format(string value)
@@ -28,7 +28,7 @@ public sealed class SgtinPatternFormatter(string indicator, string gcp, string i
 /// <param name="indicator">The indicator</param>
 /// <param name="gcp">The GS1 Company Prefix</param>
 /// <param name="itemRef">The itemRef</param>
-public sealed class GtinPatternFormatter(string indicator, string gcp, string itemRef) : IEpcFormatter
+public sealed class GtinPattern(string indicator, string gcp, string itemRef) : IEpcIdentifier
 {
     /// <inheritdoc/>
     public EpcResult Format(string value)

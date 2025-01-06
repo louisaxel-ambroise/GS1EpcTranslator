@@ -12,11 +12,11 @@ public sealed class DlSgtinParserStrategy(GS1CompanyPrefixProvider companyPrefix
     public string Pattern => "^https?://.*/01/(?<indicator>\\d)(?<gtin>\\d{13})/21/(?<ext>.+)$";
 
     /// <summary>
-    /// Transforms the DigitalLink GTIN parsed values into a <see cref="IEpcFormatter"/>
+    /// Transforms the DigitalLink GTIN parsed values into a <see cref="IEpcIdentifier"/>
     /// </summary>
     /// <param name="values">The values retrieved from the regex match</param>
-    /// <returns>The <see cref="IEpcFormatter"/> for the GTIN value</returns>
-    public IEpcFormatter Transform(IDictionary<string, string> values)
+    /// <returns>The <see cref="IEpcIdentifier"/> for the GTIN value</returns>
+    public IEpcIdentifier Transform(IDictionary<string, string> values)
     {
         var gcpLength = companyPrefixProvider.GetCompanyPrefixLength(values["gtin"]);
         var gcp = values["gtin"][..gcpLength];
@@ -25,7 +25,7 @@ public sealed class DlSgtinParserStrategy(GS1CompanyPrefixProvider companyPrefix
 
         Alphanumeric.Validate(value: ext, maxLength: 20);
 
-        return new SgtinFormatter(
+        return new Sgtin(
             indicator: values["indicator"],
             gcp: gcp, 
             itemRef: itemRef, 

@@ -9,7 +9,7 @@ namespace GS1EpcTranslator.Formatters;
 /// <param name="gcp">The GS1 Company Prefix</param>
 /// <param name="itemRef">The itemRef</param>
 /// <param name="tpx">The tpx</param>
-public sealed class UpuiFormatter(string indicator, string gcp, string itemRef, string tpx) : IEpcFormatter
+public sealed class Upui(string indicator, string gcp, string itemRef, string tpx) : IEpcIdentifier
 {
     /// <inheritdoc/>
     public EpcResult Format(string value)

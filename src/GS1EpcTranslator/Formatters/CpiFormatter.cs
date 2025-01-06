@@ -8,7 +8,7 @@ namespace GS1EpcTranslator.Formatters;
 /// <param name="gcp">The GS1 Company Prefix</param>
 /// <param name="componentType">The componentType</param>
 /// <param name="serial">The serial</param>
-public sealed class CpiFormatter(string gcp, string componentType, string serial) : IEpcFormatter
+public sealed class Cpi(string gcp, string componentType, string serial) : IEpcIdentifier
 {
     /// <inheritdoc/>
     public EpcResult Format(string value)

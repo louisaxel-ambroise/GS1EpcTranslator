@@ -8,7 +8,7 @@ namespace GS1EpcTranslator.Formatters;
 /// <param name="gcp">The GS1 Company Prefix</param>
 /// <param name="serialRefRemainder">The serialRef remainder</param>
 /// <param name="extensionDigit">The extension digit</param>
-public sealed class SsccFormatter(string gcp, string serialRefRemainder, string extensionDigit) : IEpcFormatter
+public sealed class Sscc(string gcp, string serialRefRemainder, string extensionDigit) : IEpcIdentifier
 {
     /// <inheritdoc/>
     public EpcResult Format(string value)

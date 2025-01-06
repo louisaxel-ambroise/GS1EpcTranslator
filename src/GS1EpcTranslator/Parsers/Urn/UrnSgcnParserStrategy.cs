@@ -12,15 +12,15 @@ public sealed class UrnSgcnParserStrategy(GS1CompanyPrefixProvider gcpProvider) 
     public string Pattern => "^urn:epc:id:sgcn:(?<gcp>\\d{6,12})\\.(?<couponRef>\\d{0,6})(?<=[\\d\\.]{13}).(?<serial>\\d+)$";
 
     /// <summary>
-    /// Transforms the URN SGCN parsed values into a <see cref="IEpcFormatter"/>
+    /// Transforms the URN SGCN parsed values into a <see cref="IEpcIdentifier"/>
     /// </summary>
     /// <param name="values">The values retrieved from the regex match</param>
-    /// <returns>The <see cref="IEpcFormatter"/> for the SGCN value</returns>
-    public IEpcFormatter Transform(IDictionary<string, string> values)
+    /// <returns>The <see cref="IEpcIdentifier"/> for the SGCN value</returns>
+    public IEpcIdentifier Transform(IDictionary<string, string> values)
     {
         CompanyPrefixValidator.VerifyGcpLength(values["gcp"], gcpProvider);
 
-        return new SgcnFormatter(
+        return new Sgcn(
             gcp: values["gcp"],
             couponRef: values["couponRef"],
             serial: values["serial"]);

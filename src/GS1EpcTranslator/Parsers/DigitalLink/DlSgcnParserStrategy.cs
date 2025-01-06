@@ -12,11 +12,11 @@ public sealed class DlSgcnParserStrategy(GS1CompanyPrefixProvider companyPrefixP
     public string Pattern => "^(?<domain>https?://.*)/(255|sgcn)/(?<sgcn>\\d{12})(?<cd>\\d)(?<serial>\\d+)$";
 
     /// <summary>
-    /// Transforms the DigitalLink SGCN parsed values into a <see cref="IEpcFormatter"/>
+    /// Transforms the DigitalLink SGCN parsed values into a <see cref="IEpcIdentifier"/>
     /// </summary>
     /// <param name="values">The values retrieved from the regex match</param>
-    /// <returns>The <see cref="IEpcFormatter"/> for the SGCN value</returns>
-    public IEpcFormatter Transform(IDictionary<string, string> values)
+    /// <returns>The <see cref="IEpcIdentifier"/> for the SGCN value</returns>
+    public IEpcIdentifier Transform(IDictionary<string, string> values)
     {
         var gcpLength = companyPrefixProvider.GetCompanyPrefixLength(values["sgcn"]);
         var gcp = values["sgcn"][..gcpLength];
@@ -24,7 +24,7 @@ public sealed class DlSgcnParserStrategy(GS1CompanyPrefixProvider companyPrefixP
 
         ArgumentOutOfRangeException.ThrowIfNotEqual(values["cd"], CheckDigit.Compute(values["sgcn"]));
 
-        return new SgcnFormatter(
+        return new Sgcn(
             gcp: gcp,
             couponRef: couponRef,
             serial: values["serial"]);

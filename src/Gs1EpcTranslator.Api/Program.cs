@@ -34,7 +34,7 @@ app.MapPost("/translate", ([FromBody] string[] values, [FromServices] GS1EpcTran
 {
     var results = values.Select(value => context.TryParse(value, out var result)
             ? result.Format(value)
-            : UnknownFormatter.Value.Format(value));
+            : Unknown.Value.Format(value));
 
     return Results.Ok(new { Data = results });
 });

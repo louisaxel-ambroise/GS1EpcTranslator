@@ -12,11 +12,11 @@ public sealed class ElementStringSsccParserStrategy(GS1CompanyPrefixProvider com
     public string Pattern => "^\\(00\\)(?<ext>\\d)(?<sscc>\\d{16})(?<cd>\\d)$";
 
     /// <summary>
-    /// Transforms the ElementString SSCC parsed values into a <see cref="IEpcFormatter"/>
+    /// Transforms the ElementString SSCC parsed values into a <see cref="IEpcIdentifier"/>
     /// </summary>
     /// <param name="values">The values retrieved from the regex match</param>
-    /// <returns>The <see cref="IEpcFormatter"/> for the SSCC value</returns>
-    public IEpcFormatter Transform(IDictionary<string, string> values)
+    /// <returns>The <see cref="IEpcIdentifier"/> for the SSCC value</returns>
+    public IEpcIdentifier Transform(IDictionary<string, string> values)
     {
         var gcpLength = companyPrefixProvider.GetCompanyPrefixLength(values["sscc"]);
         var gcp = values["sscc"][..gcpLength];
@@ -25,7 +25,7 @@ public sealed class ElementStringSsccParserStrategy(GS1CompanyPrefixProvider com
         ArgumentOutOfRangeException.ThrowIfLessThan(gcpLength, 0);
         ArgumentOutOfRangeException.ThrowIfNotEqual(values["cd"], CheckDigit.Compute(values["ext"] + values["sscc"]));
 
-        return new SsccFormatter(
+        return new Sscc(
             gcp: gcp, 
             serialRefRemainder: serialRefRemainder, 
             extensionDigit: values["ext"]);

@@ -12,15 +12,15 @@ public sealed class UrnGsinParserStrategy(GS1CompanyPrefixProvider gcpProvider) 
     public string Pattern => "^urn:epc:id:gsin:(?<gcp>\\d{6,12})\\.(?<shipperRef>\\d{4,10})(?<=[\\d\\.]{17})$";
 
     /// <summary>
-    /// Transforms the URN GSIN parsed values into a <see cref="IEpcFormatter"/>
+    /// Transforms the URN GSIN parsed values into a <see cref="IEpcIdentifier"/>
     /// </summary>
     /// <param name="values">The values retrieved from the regex match</param>
-    /// <returns>The <see cref="IEpcFormatter"/> for the GSIN value</returns>
-    public IEpcFormatter Transform(IDictionary<string, string> values)
+    /// <returns>The <see cref="IEpcIdentifier"/> for the GSIN value</returns>
+    public IEpcIdentifier Transform(IDictionary<string, string> values)
     {
         CompanyPrefixValidator.VerifyGcpLength(values["gcp"], gcpProvider);
 
-        return new GsinFormatter(
+        return new Gsin(
             gcp: values["gcp"],
             shipperRef: values["shipperRef"]);
     }

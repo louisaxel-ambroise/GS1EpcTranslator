@@ -12,18 +12,18 @@ public sealed class UrnItipParserStrategy(GS1CompanyPrefixProvider gcpProvider) 
     public string Pattern => "^urn:epc:id:itip:(?<gcp>\\d{6,12})\\.(?<indicator>\\d)(?<itemRef>\\d{0,6})(?<=[\\d\\.]{14})\\.(?<piece>\\d{2})\\.(?<total>\\d{2})\\.(?<sn>.+)$";
 
     /// <summary>
-    /// Transforms the URN ITIP parsed values into a <see cref="IEpcFormatter"/>
+    /// Transforms the URN ITIP parsed values into a <see cref="IEpcIdentifier"/>
     /// </summary>
     /// <param name="values">The values retrieved from the regex match</param>
-    /// <returns>The <see cref="IEpcFormatter"/> for the ITIP value</returns>
-    public IEpcFormatter Transform(IDictionary<string, string> values)
+    /// <returns>The <see cref="IEpcIdentifier"/> for the ITIP value</returns>
+    public IEpcIdentifier Transform(IDictionary<string, string> values)
     {
         var serialNumber = values["sn"].ToGraphicSymbol();
 
         Alphanumeric.Validate(serialNumber, 28);
         CompanyPrefixValidator.VerifyGcpLength(values["gcp"], gcpProvider);
 
-        return new ItipFormatter(
+        return new Itip(
             gcp: values["gcp"],
             indicator: values["indicator"],
             itemRef: values["itemRef"],

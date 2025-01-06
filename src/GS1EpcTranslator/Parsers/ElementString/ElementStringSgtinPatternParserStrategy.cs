@@ -12,16 +12,16 @@ public sealed class ElementStringSgtinPatternParserStrategy(GS1CompanyPrefixProv
     public string Pattern => "^\\(01\\)(?<indicator>\\d)(?<gtin>\\d{13})$";
 
     /// <summary>
-    /// Transforms the ElementString SGTIN pattern parsed values into a <see cref="IEpcFormatter"/>
+    /// Transforms the ElementString SGTIN pattern parsed values into a <see cref="IEpcIdentifier"/>
     /// </summary>
     /// <param name="values">The values retrieved from the regex match</param>
-    /// <returns>The <see cref="IEpcFormatter"/> for the SGTIN pattern value</returns>
-    public IEpcFormatter Transform(IDictionary<string, string> values)
+    /// <returns>The <see cref="IEpcIdentifier"/> for the SGTIN pattern value</returns>
+    public IEpcIdentifier Transform(IDictionary<string, string> values)
     {
         var gcpLength = companyPrefixProvider.GetCompanyPrefixLength(values["gtin"]);
         var gcp = values["gtin"][..gcpLength];
         var gtin = values["gtin"][gcpLength..];
 
-        return new GtinPatternFormatter(values["indicator"], gcp, gtin);
+        return new GtinPattern(values["indicator"], gcp, gtin);
     }
 }

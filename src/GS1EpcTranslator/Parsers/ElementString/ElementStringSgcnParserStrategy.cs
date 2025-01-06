@@ -12,11 +12,11 @@ public sealed class ElementStringSgcnParserStrategy(GS1CompanyPrefixProvider com
     public string Pattern => "^\\(255\\)(?<sgcn>\\d{12})(?<cd>\\d)(?<serial>\\d+)$";
 
     /// <summary>
-    /// Transforms the ElementString SGCN parsed values into a <see cref="IEpcFormatter"/>
+    /// Transforms the ElementString SGCN parsed values into a <see cref="IEpcIdentifier"/>
     /// </summary>
     /// <param name="values">The values retrieved from the regex match</param>
-    /// <returns>The <see cref="IEpcFormatter"/> for the SGCN value</returns>
-    public IEpcFormatter Transform(IDictionary<string, string> values)
+    /// <returns>The <see cref="IEpcIdentifier"/> for the SGCN value</returns>
+    public IEpcIdentifier Transform(IDictionary<string, string> values)
     {
         var gcpLength = companyPrefixProvider.GetCompanyPrefixLength(values["sgcn"]);
         var gcp = values["sgcn"][..gcpLength];
@@ -25,7 +25,7 @@ public sealed class ElementStringSgcnParserStrategy(GS1CompanyPrefixProvider com
         ArgumentOutOfRangeException.ThrowIfLessThan(gcpLength, 0);
         ArgumentOutOfRangeException.ThrowIfNotEqual(values["cd"], CheckDigit.Compute(values["sgcn"]));
 
-        return new SgcnFormatter(
+        return new Sgcn(
             gcp: gcp,
             couponRef: couponRef,
             serial: values["serial"]);

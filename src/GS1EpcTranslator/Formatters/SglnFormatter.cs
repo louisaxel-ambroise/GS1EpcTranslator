@@ -8,7 +8,7 @@ namespace GS1EpcTranslator.Formatters;
 /// <param name="gcp">The company prefix</param>
 /// <param name="locationRef">The locationRef</param>
 /// <param name="ext">The extension</param>
-public sealed class SglnFormatter(string gcp, string locationRef, string ext) : IEpcFormatter
+public sealed class Sgln(string gcp, string locationRef, string ext) : IEpcIdentifier
 {
     /// <inheritdoc/>
     public EpcResult Format(string value)

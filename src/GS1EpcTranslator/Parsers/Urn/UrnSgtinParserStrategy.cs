@@ -12,17 +12,17 @@ public sealed class UrnSgtinParserStrategy(GS1CompanyPrefixProvider gcpProvider)
     public string Pattern => $"^urn:epc:id:sgtin:(?<gcp>\\d{{6,12}})\\.(?<indicator>\\d)(?<itemRef>\\d{{0,6}})(?<=[\\d\\.]{{14}})\\.(?<ext>.+)$";
 
     /// <summary>
-    /// Transforms the URN SGTIN parsed values into a <see cref="IEpcFormatter"/>
+    /// Transforms the URN SGTIN parsed values into a <see cref="IEpcIdentifier"/>
     /// </summary>
     /// <param name="values">The values retrieved from the regex match</param>
-    /// <returns>The <see cref="IEpcFormatter"/> for the SGTIN value</returns>
-    public IEpcFormatter Transform(IDictionary<string, string> values)
+    /// <returns>The <see cref="IEpcIdentifier"/> for the SGTIN value</returns>
+    public IEpcIdentifier Transform(IDictionary<string, string> values)
     {
         var ext = values["ext"].ToGraphicSymbol();
         Alphanumeric.Validate(value: ext, maxLength: 20);
         CompanyPrefixValidator.VerifyGcpLength(values["gcp"], gcpProvider);
 
-        return new SgtinFormatter(
+        return new Sgtin(
             indicator: values["indicator"],
             gcp: values["gcp"],
             itemRef: values["itemRef"],

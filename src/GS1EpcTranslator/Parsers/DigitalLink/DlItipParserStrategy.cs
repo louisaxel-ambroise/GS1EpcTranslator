@@ -12,11 +12,11 @@ public sealed class DlItipParserStrategy(GS1CompanyPrefixProvider companyPrefixP
     public string Pattern => "^https?://.*/8006/(?<indicator>\\d)(?<itip>\\d{12})(?<cd>\\d)(?<piece>\\d{2})(?<total>\\d{2})/21/(?<sn>.+)$$";
 
     /// <summary>
-    /// Transforms the DigitalLink ITIP parsed values into a <see cref="IEpcFormatter"/>
+    /// Transforms the DigitalLink ITIP parsed values into a <see cref="IEpcIdentifier"/>
     /// </summary>
     /// <param name="values">The values retrieved from the regex match</param>
-    /// <returns>The <see cref="IEpcFormatter"/> for the ITIP value</returns>
-    public IEpcFormatter Transform(IDictionary<string, string> values)
+    /// <returns>The <see cref="IEpcIdentifier"/> for the ITIP value</returns>
+    public IEpcIdentifier Transform(IDictionary<string, string> values)
     {
         var gcpLength = companyPrefixProvider.GetCompanyPrefixLength(values["itip"]);
         var gcp = values["itip"][..gcpLength];
@@ -26,7 +26,7 @@ public sealed class DlItipParserStrategy(GS1CompanyPrefixProvider companyPrefixP
         Alphanumeric.Validate(serialNumber, 28);
         ArgumentOutOfRangeException.ThrowIfNotEqual(values["cd"], CheckDigit.Compute(values["indicator"] + values["itip"]));
 
-        return new ItipFormatter(
+        return new Itip(
             gcp: gcp,
             indicator: values["indicator"],
             itemRef: itemRef,

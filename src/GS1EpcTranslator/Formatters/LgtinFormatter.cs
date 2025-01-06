@@ -9,7 +9,7 @@ namespace GS1EpcTranslator.Formatters;
 /// <param name="gcp">The GS1 Company Prefix</param>
 /// <param name="itemRef">The itemRef</param>
 /// <param name="lot">The batch/lot number</param>
-public sealed class LgtinFormatter(string indicator, string gcp, string itemRef, string lot) : IEpcFormatter
+public sealed class Lgtin(string indicator, string gcp, string itemRef, string lot) : IEpcIdentifier
 {
     /// <inheritdoc/>
     public EpcResult Format(string value)

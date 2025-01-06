@@ -12,11 +12,11 @@ public sealed class ElementStringSglnParserStrategy(GS1CompanyPrefixProvider com
     public string Pattern => "^\\(414\\)(?<sgln>\\d{12})(?<cd>\\d)(\\(254\\)(?<ext>.+))?$";
 
     /// <summary>
-    /// Transforms the ElementString SGLN parsed values into a <see cref="IEpcFormatter"/>
+    /// Transforms the ElementString SGLN parsed values into a <see cref="IEpcIdentifier"/>
     /// </summary>
     /// <param name="values">The values retrieved from the regex match</param>
-    /// <returns>The <see cref="IEpcFormatter"/> for the SGLN value</returns>
-    public IEpcFormatter Transform(IDictionary<string, string> values)
+    /// <returns>The <see cref="IEpcIdentifier"/> for the SGLN value</returns>
+    public IEpcIdentifier Transform(IDictionary<string, string> values)
     {
         var gcpLength = companyPrefixProvider.GetCompanyPrefixLength(values["sgln"]);
         var gcp = values["sgln"][..gcpLength];
@@ -25,7 +25,7 @@ public sealed class ElementStringSglnParserStrategy(GS1CompanyPrefixProvider com
         Alphanumeric.Validate(values["ext"]);
         ArgumentOutOfRangeException.ThrowIfNotEqual(values["cd"], CheckDigit.Compute(values["sgln"]));
 
-        return new SglnFormatter(
+        return new Sgln(
             gcp: gcp, 
             locationRef: locationRef, 
             ext: values["ext"]);

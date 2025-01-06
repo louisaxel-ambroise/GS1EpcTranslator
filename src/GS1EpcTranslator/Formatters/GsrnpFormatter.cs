@@ -7,7 +7,7 @@ namespace GS1EpcTranslator.Formatters;
 /// </summary>
 /// <param name="gcp">The GS1 Company Prefix</param>
 /// <param name="serviceReference">The serviceReference</param>
-public sealed class GsrnpFormatter(string gcp, string serviceReference) : IEpcFormatter
+public sealed class Gsrnp(string gcp, string serviceReference) : IEpcIdentifier
 {
     /// <inheritdoc/>
     public EpcResult Format(string value)

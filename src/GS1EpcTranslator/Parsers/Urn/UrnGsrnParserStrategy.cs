@@ -12,15 +12,15 @@ public sealed class UrnGsrnParserStrategy(GS1CompanyPrefixProvider gcpProvider) 
     public string Pattern => "^urn:epc:id:gsrn:(?<gcp>\\d{6,12})\\.(?<serviceRef>\\d{5,11})(?<=[\\d\\.]{18})$";
 
     /// <summary>
-    /// Transforms the URN GSRN parsed values into a <see cref="IEpcFormatter"/>
+    /// Transforms the URN GSRN parsed values into a <see cref="IEpcIdentifier"/>
     /// </summary>
     /// <param name="values">The values retrieved from the regex match</param>
-    /// <returns>The <see cref="IEpcFormatter"/> for the GSRN value</returns>
-    public IEpcFormatter Transform(IDictionary<string, string> values)
+    /// <returns>The <see cref="IEpcIdentifier"/> for the GSRN value</returns>
+    public IEpcIdentifier Transform(IDictionary<string, string> values)
     {
         CompanyPrefixValidator.VerifyGcpLength(values["gcp"], gcpProvider);
 
-        return new GsrnFormatter(
+        return new Gsrn(
             gcp: values["gcp"],
             serviceReference: values["serviceRef"]);
     }

@@ -12,17 +12,17 @@ public sealed class DlGincParserStrategy(GS1CompanyPrefixProvider companyPrefixP
     public string Pattern => "^(?<domain>https?://.*)/(401|ginc)/(?<ginc>\\d+)$";
 
     /// <summary>
-    /// Transforms the DigitalLink GINC parsed values into a <see cref="IEpcFormatter"/>
+    /// Transforms the DigitalLink GINC parsed values into a <see cref="IEpcIdentifier"/>
     /// </summary>
     /// <param name="values">The values retrieved from the regex match</param>
-    /// <returns>The <see cref="IEpcFormatter"/> for the GINC value</returns>
-    public IEpcFormatter Transform(IDictionary<string, string> values)
+    /// <returns>The <see cref="IEpcIdentifier"/> for the GINC value</returns>
+    public IEpcIdentifier Transform(IDictionary<string, string> values)
     {
         var gcpLength = companyPrefixProvider.GetCompanyPrefixLength(values["ginc"]);
         var gcp = values["ginc"][..gcpLength];
         var consignmentRef = values["ginc"][gcpLength..];
 
-        return new GincFormatter(
+        return new Ginc(
             gcp: gcp,
             consignmentRef: consignmentRef);
     }

@@ -12,11 +12,11 @@ public sealed class DlGraiParserStrategy(GS1CompanyPrefixProvider companyPrefixP
     public string Pattern => "^(?<domain>https?://.*)/(8003|grai)/0(?<grai>\\d{12})(?<cd>\\d)(?<sn>.+)$";
 
     /// <summary>
-    /// Transforms the DigitalLink GRAI parsed values into a <see cref="IEpcFormatter"/>
+    /// Transforms the DigitalLink GRAI parsed values into a <see cref="IEpcIdentifier"/>
     /// </summary>
     /// <param name="values">The values retrieved from the regex match</param>
-    /// <returns>The <see cref="IEpcFormatter"/> for the GRAI value</returns>
-    public IEpcFormatter Transform(IDictionary<string, string> values)
+    /// <returns>The <see cref="IEpcIdentifier"/> for the GRAI value</returns>
+    public IEpcIdentifier Transform(IDictionary<string, string> values)
     {
         var gcpLength = companyPrefixProvider.GetCompanyPrefixLength(values["grai"]);
         var gcp = values["grai"][..gcpLength];
@@ -26,7 +26,7 @@ public sealed class DlGraiParserStrategy(GS1CompanyPrefixProvider companyPrefixP
         Alphanumeric.Validate(serialNumber);
         ArgumentOutOfRangeException.ThrowIfNotEqual(values["cd"], CheckDigit.Compute(values["grai"]));
 
-        return new GraiFormatter(
+        return new Grai(
             gcp: gcp, 
             assetType: assetType, 
             serialNumber: serialNumber);

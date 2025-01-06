@@ -12,11 +12,11 @@ public sealed class ElementStringPglnParserStrategy(GS1CompanyPrefixProvider com
     public string Pattern => "^\\(417\\)(?<pgln>\\d{12})(?<cd>\\d)$";
 
     /// <summary>
-    /// Transforms the ElementString PGLN parsed values into a <see cref="IEpcFormatter"/>
+    /// Transforms the ElementString PGLN parsed values into a <see cref="IEpcIdentifier"/>
     /// </summary>
     /// <param name="values">The values retrieved from the regex match</param>
-    /// <returns>The <see cref="IEpcFormatter"/> for the PGLN value</returns>
-    public IEpcFormatter Transform(IDictionary<string, string> values)
+    /// <returns>The <see cref="IEpcIdentifier"/> for the PGLN value</returns>
+    public IEpcIdentifier Transform(IDictionary<string, string> values)
     {
         var gcpLength = companyPrefixProvider.GetCompanyPrefixLength(values["pgln"]);
         var gcp = values["pgln"][..gcpLength];
@@ -24,7 +24,7 @@ public sealed class ElementStringPglnParserStrategy(GS1CompanyPrefixProvider com
 
         ArgumentOutOfRangeException.ThrowIfNotEqual(values["cd"], CheckDigit.Compute(values["pgln"]));
 
-        return new PglnFormatter(
+        return new Pgln(
             gcp: gcp, 
             partyRef: partyRef);
     }

@@ -12,11 +12,11 @@ public sealed class ElementStringItipParserStrategy(GS1CompanyPrefixProvider com
     public string Pattern => "^\\(8006\\)(?<indicator>\\d)(?<itip>\\d{12})(?<cd>\\d)(?<piece>\\d{2})(?<total>\\d{2})\\(21\\)(?<sn>.+)$";
 
     /// <summary>
-    /// Transforms the ElementString ITIP parsed values into a <see cref="IEpcFormatter"/>
+    /// Transforms the ElementString ITIP parsed values into a <see cref="IEpcIdentifier"/>
     /// </summary>
     /// <param name="values">The values retrieved from the regex match</param>
-    /// <returns>The <see cref="IEpcFormatter"/> for the ITIP value</returns>
-    public IEpcFormatter Transform(IDictionary<string, string> values)
+    /// <returns>The <see cref="IEpcIdentifier"/> for the ITIP value</returns>
+    public IEpcIdentifier Transform(IDictionary<string, string> values)
     {
         var gcpLength = companyPrefixProvider.GetCompanyPrefixLength(values["itip"]);
         var gcp = values["itip"][..gcpLength];
@@ -25,7 +25,7 @@ public sealed class ElementStringItipParserStrategy(GS1CompanyPrefixProvider com
         Alphanumeric.Validate(values["sn"], 28);
         ArgumentOutOfRangeException.ThrowIfNotEqual(values["cd"], CheckDigit.Compute(values["indicator"] + values["itip"]));
 
-        return new ItipFormatter(
+        return new Itip(
             gcp: gcp,
             indicator: values["indicator"],
             itemRef: itemRef,

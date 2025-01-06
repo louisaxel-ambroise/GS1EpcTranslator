@@ -11,14 +11,14 @@ public static class CompanyPrefixValidator
     /// </summary>
     /// <param name="gcpPrefix">The GCP prefix extracted</param>
     /// <param name="companyPrefixProvider">The GCP prefix provider</param>
-    /// <exception cref="Exception">Raised when the length of the GCP prefix doesn't matches the provider result</exception>
+    /// <exception cref="InvalidOperationException">Raised when the length of the GCP prefix doesn't matches the provider result</exception>
     public static void VerifyGcpLength(string gcpPrefix, GS1CompanyPrefixProvider companyPrefixProvider)
     {
         var companyPrefixLength = companyPrefixProvider.GetCompanyPrefixLength(gcpPrefix);
 
         if(companyPrefixLength != gcpPrefix.Length)
         {
-            throw new Exception("Invalid company prefix length.");
+            throw new InvalidOperationException("Invalid company prefix length.");
         }
     }
 }
