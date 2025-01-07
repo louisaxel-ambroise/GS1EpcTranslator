@@ -1,5 +1,6 @@
 ﻿using GS1CompanyPrefix;
 using Microsoft.Extensions.Options;
+using System.Xml;
 
 namespace Gs1EpcTranslator.Api.HostedServices;
 
@@ -9,6 +10,13 @@ public sealed class CompanyPrefixLoaderHostedServices : IHostedService
     private readonly GS1CompanyPrefixProvider _gcpProvider;
     private readonly HttpClient _httpClient;
     private readonly Timer _timer;
+
+    private static readonly XmlReaderSettings settings = new()
+    {
+        IgnoreComments = true,
+        IgnoreWhitespace = true,
+        CloseInput = true
+    };
 
     public CompanyPrefixLoaderHostedServices(GS1CompanyPrefixProvider gcpProvider, IOptions<CompanyPrefixOptions> options)
     {
@@ -30,9 +38,15 @@ public sealed class CompanyPrefixLoaderHostedServices : IHostedService
         var request = new HttpRequestMessage(HttpMethod.Get, string.Empty);
         var response = _httpClient.Send(request, HttpCompletionOption.ResponseHeadersRead);
 
-        using var responseStream = response.Content.ReadAsStream();
+        using var reader = XmlReader.Create(response.Content.ReadAsStream(), settings);
 
-        GS1CompanyPrefixLoader.LoadFromJsonStream(_gcpProvider, responseStream, response.Content.Headers.ContentLength ?? 0);
+        while (reader.ReadToFollowing("entry"))
+        {
+            var prefix = reader.GetAttribute("prefix");
+            var length = int.Parse(reader.GetAttribute("gcpLength") ?? "-1");
+
+            _gcpProvider.SetPrefix(prefix, length);
+        }
     }
 
     public Task StopAsync(CancellationToken stoppingToken)
