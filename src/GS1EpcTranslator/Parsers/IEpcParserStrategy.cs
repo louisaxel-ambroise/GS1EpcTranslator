@@ -28,7 +28,7 @@ public interface IEpcParserStrategy
     /// </summary>
     /// <param name="value">The EPC value to check against the EPC format</param>
     /// <param name="result">The result of the TryParse operation</param>
-    /// <returns>If the operation succeeded</returns>
+    /// <returns>True if the input string matches the regex, false otherwise</returns>
     public bool TryParse(string value, out IEpcFormatter result)
     {
         result = UnknownFormatter.Value;
