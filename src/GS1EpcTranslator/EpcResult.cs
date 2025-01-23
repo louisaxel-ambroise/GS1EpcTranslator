@@ -1,4 +1,4 @@
-﻿namespace FasTnT.GS1EpcTranslator;
+﻿namespace GS1EpcTranslator;
 
 /// <summary>
 /// Result of an Epc parsing

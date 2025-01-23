@@ -1,6 +1,4 @@
-﻿using FasTnT.GS1EpcTranslator;
-
-namespace GS1EpcTranslator.Formatters;
+﻿namespace GS1EpcTranslator.Formatters;
 
 /// <summary>
 /// Default formatter for Epc in an unknown format

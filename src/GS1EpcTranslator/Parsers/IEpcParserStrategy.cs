@@ -5,7 +5,7 @@ namespace GS1EpcTranslator.Parsers;
 /// <summary>
 /// Interface that allows to parse a specific EPC format.
 /// The EPC is specified by a Regex pattern, and if it matches the value is parsed
-/// to an <see cref="IEpcFormatter"/> that will return the <see cref="FasTnT.GS1EpcTranslator.EpcResult"/> for the value
+/// to an <see cref="IEpcFormatter"/> that will return the <see cref="GS1EpcTranslator.EpcResult"/> for the value
 /// </summary>
 public interface IEpcParserStrategy
 {

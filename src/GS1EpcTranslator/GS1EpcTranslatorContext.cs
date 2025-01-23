@@ -3,7 +3,7 @@ global using GS1EpcTranslator.Formatters;
 global using GS1EpcTranslator.Helpers;
 global using GS1EpcTranslator.Parsers;
 
-namespace FasTnT.GS1EpcTranslator;
+namespace GS1EpcTranslator;
 
 /// <summary>
 /// This class takes all the available <see cref="IEpcParserStrategy"/> available to parse
@@ -21,9 +21,9 @@ public sealed class GS1EpcTranslatorContext(IEnumerable<IEpcParserStrategy> stra
     /// <returns>If a strategy matched the value</returns>
     public bool TryParse(string value, out IEpcFormatter result)
     {
-        foreach(var strategy in strategies) 
+        foreach (var strategy in strategies)
         {
-            if(strategy.TryParse(value, out result))
+            if (strategy.TryParse(value, out result))
             {
                 return true;
             }

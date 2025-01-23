@@ -1,4 +1,3 @@
-using FasTnT.GS1EpcTranslator;
 using GS1EpcTranslator.Parsers;
 using Microsoft.AspNetCore.Mvc;
 using GS1CompanyPrefix;
@@ -7,6 +6,7 @@ using System.Text.Json.Serialization;
 using System.Reflection;
 using Gs1EpcTranslator.Api.HostedServices;
 using static Gs1EpcTranslator.Api.HostedServices.CompanyPrefixLoaderHostedServices;
+using GS1EpcTranslator;
 
 var builder = WebApplication.CreateBuilder(args);
 

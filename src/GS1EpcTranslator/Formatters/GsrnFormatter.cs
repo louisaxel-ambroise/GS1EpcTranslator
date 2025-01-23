@@ -1,6 +1,4 @@
-﻿using FasTnT.GS1EpcTranslator;
-
-namespace GS1EpcTranslator.Formatters;
+﻿namespace GS1EpcTranslator.Formatters;
 
 /// <summary>
 /// Formats an GSRN Epc in all available formats

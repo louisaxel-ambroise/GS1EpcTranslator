@@ -1,4 +1,4 @@
-﻿namespace GS1EpcTranslator.Parsers.Implementations;
+﻿namespace GS1EpcTranslator.Parsers.Urn;
 
 /// <summary>
 /// Implementation of <see cref="IEpcParserStrategy"/> that matches UPUI in URN format

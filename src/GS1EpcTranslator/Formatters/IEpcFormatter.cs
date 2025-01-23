@@ -1,6 +1,4 @@
-﻿using FasTnT.GS1EpcTranslator;
-
-namespace GS1EpcTranslator.Formatters;
+﻿namespace GS1EpcTranslator.Formatters;
 
 /// <summary>
 /// Interface shared by all the Epc formatters
