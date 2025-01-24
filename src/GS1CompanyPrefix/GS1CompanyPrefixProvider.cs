@@ -32,7 +32,7 @@ public sealed class GS1CompanyPrefixProvider
 
         // Loop through the trie values until we reach a Leaf node or we went through 12 chars already.
         // This last condition is only a safety measure as we must have exited the trie before that.
-        for (var i = 0; i < 12 && !current.IsLeaf; i++)
+        for (var i = 0; i < 12 && i < value.Length && !current.IsLeaf; i++)
         {
             current = current[value[i]];
         }
@@ -55,7 +55,7 @@ public sealed class GS1CompanyPrefixProvider
         // of the prefix does not contain any Leaf node.
         for (var i = 0; i < prefix.Length - 1; i++)
         {
-            // If the next value is a leaf convert it to a default Node.
+            // Make sure the next value is not a leaf, converting it to default node if needed.
             if (current[prefix[i]].IsLeaf)
             {
                 current[prefix[i]] = Node.Default;
@@ -65,8 +65,6 @@ public sealed class GS1CompanyPrefixProvider
             current = current[prefix[i]];
         }
 
-        // At that point i contains the latest value of the GCP, so we set the child
-        // of the current node to a Leaf node with the length value.
         current[prefix[^1]] = length;
     }
 
