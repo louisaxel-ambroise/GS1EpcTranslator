@@ -4,10 +4,10 @@
 /// GS1 GCP length store/provider.
 /// </summary>
 /// <remarks>
-/// This class uses a tree structure to store the company prefixes instead of a dictionary as recommended by GS1.
+/// This class uses a trie structure to store the company prefixes instead of a dictionary as recommended by GS1.
 /// It allows to have a more memory and time performant searching at the cost of a slightly slower storage.
 /// For example the entire GS1 GCP list as of 2024 only takes 2Mb in memory, and the search for a specific prefix
-/// always takes less than 12 property access operations.
+/// always takes at most 12 property access operations, and to exit as early as possible in case of no match.
 /// </remarks>
 public sealed class GS1CompanyPrefixProvider
 {
@@ -30,17 +30,16 @@ public sealed class GS1CompanyPrefixProvider
     {
         var current = _root;
 
-        // Loop through the current value until we reach a Leaf node or we exceed 12 char deep.
-        // This last condition is only a safety measure as we must have exited the tree before that.
+        // Loop through the trie values until we reach a Leaf node or we went through 12 chars already.
+        // This last condition is only a safety measure as we must have exited the trie before that.
         for (var i = 0; i < 12 && !current.IsLeaf; i++)
         {
-            var charIndex = value[i] - Zero;
-            current = current[charIndex];
+            current = current[value[i]];
         }
 
-        // At that point the current.Value will contain the GCP length or return -1 if the current node is not a Leaf
-        // It is then safe to return without having to check if the Node is a Leaf or not
-        return current.Value;
+        // At that point the current.Length will contain the GCP length or -1 if the current node is not a Leaf
+        // It is then safe to return without having to check the type of the current Node value
+        return current.Length;
     }
 
     /// <summary>
@@ -51,33 +50,28 @@ public sealed class GS1CompanyPrefixProvider
     public void SetPrefix(string prefix, int length)
     {
         var current = _root;
-        int i;
 
         // This loop makes sure that all the nodes in the path until the last character
         // of the prefix does not contain any Leaf node.
-        for (i = 0; i < prefix.Length - 1; i++)
+        for (var i = 0; i < prefix.Length - 1; i++)
         {
-            var charIndex = prefix[i] - Zero;
-
             // If the next value is a leaf convert it to a default Node.
-            if (current[charIndex].IsLeaf)
+            if (current[prefix[i]].IsLeaf)
             {
-                current[charIndex] = Node.Default;
+                current[prefix[i]] = Node.Default;
             }
 
-            // Move to the child node
-            current = current[charIndex];
+            // Set the current node to the next one in the path
+            current = current[prefix[i]];
         }
 
         // At that point i contains the latest value of the GCP, so we set the child
         // of the current node to a Leaf node with the length value.
-        current[prefix[i] - Zero] = Node.Leaf(length);
+        current[prefix[^1]] = length;
     }
 
-    private const char Zero = '0';
-
     /// <summary>
-    /// A Node holds a specific value for a goven character in a GCP path.
+    /// A Node holds a specific value for a given character in a GCP path.
     /// It can be an intermediate node that contains an array of 10 child 
     /// Nodes for each character between '0' and '9'.
     /// or a leaf that contains the GCP length for the current path.
@@ -85,10 +79,10 @@ public sealed class GS1CompanyPrefixProvider
     private sealed record Node
     {
         private readonly Node[] _children;
-        private readonly int _length = -1;
+        public int Length { get; private set; } = -1;
 
         private Node(Node[] children) => _children = children;
-        private Node(int length) => _length = length;
+        private Node(int length) => Length = length;
 
         /// <summary>
         /// Determines if a node is a leaf (end of GCP prefix) or if it contains children
@@ -96,28 +90,23 @@ public sealed class GS1CompanyPrefixProvider
         public bool IsLeaf => _children is null;
 
         /// <summary>
-        /// Returns the GCP length of the current path, or -1 if it is not a leaf
-        /// </summary>
-        public int Value => _length;
-
-        /// <summary>
-        /// Gets or sets the children for the specified numerical character (between '0' and '9')
+        /// Gets or sets the children for the specified character (between '0' and '9')
         /// </summary>
         /// <param name="index">The character to get or set the value</param>
         /// <returns>The children for the specified character</returns>
-        public Node this[int index]
+        public Node this[char index]
         {
             get
             {
-                EnsureInRange(index, 0, 9);
+                EnsureInRange(index);
 
-                return _children?[index] ?? _values[0];
+                return _children?[index - '0'] ?? _values[0];
             }
             set
             {
-                EnsureInRange(index, 0, 9);
+                EnsureInRange(index);
 
-                _children![index] = value;
+                _children![index - '0'] = value;
             }
         }
 
@@ -127,11 +116,11 @@ public sealed class GS1CompanyPrefixProvider
         public static Node Default => new(new Node[10]);
 
         /// <summary>
-        /// Returns a leaf node with the specified GCP length value
+        /// Returns the leaf node matching the specified GCP length value
         /// </summary>
         /// <param name="value">The GCP length value</param>
         /// <returns>The leaf Node</returns>
-        public static Node Leaf(int value) => _values[value + 1];
+        public static implicit operator Node(int value) => _values[value + 1];
 
         private static readonly Node[] _values = Enumerable.Range(-1, 14).Select(x => new Node(x)).ToArray();
 
@@ -139,11 +128,11 @@ public sealed class GS1CompanyPrefixProvider
         /// Verifies that the provided value is between the min and max values.
         /// </summary>
         /// <param name="value">The provided value to verify</param>
-        /// <param name="min">The invlusive min value allowed</param>
-        /// <param name="max">The inclusive max value allowed</param>
-        private static void EnsureInRange(int value, int min, int max)
+        /// <param name="lowest">The invlusive min value allowed</param>
+        /// <param name="highest">The inclusive max value allowed</param>
+        private static void EnsureInRange(char value)
         {
-            if (value < min || value > max)
+            if (value < '0' || value > '9')
             {
                 throw new ArgumentOutOfRangeException(nameof(value));
             }

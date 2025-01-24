@@ -66,6 +66,7 @@ public sealed class CompanyPrefixLoaderHostedServices : IHostedService
 
             _gcpProvider.SetPrefix(prefix, length);
         }
+
         _lastEtag = response.Headers.ETag?.Tag;
     }
 
