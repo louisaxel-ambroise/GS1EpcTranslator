@@ -7,7 +7,7 @@
 public sealed class DlPglnParserStrategy(GS1CompanyPrefixProvider companyPrefixProvider) : IEpcParserStrategy
 {
     /// <summary>
-    /// Matches the DigitalLink PGLN format (AI 414) with or wirhout extension (AI 417)
+    /// Matches the DigitalLink PGLN format (AI 414) with or without extension (AI 417)
     /// </summary>
     public string Pattern => "^(?<domain>https?://.*)/(417|pgln)/(?<pgln>\\d{12})(?<cd>\\d)$";
 
